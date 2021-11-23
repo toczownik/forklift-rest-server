@@ -3,7 +3,7 @@ package com.example.forkliftrestserver;
 import com.example.forkliftrestserver.controller.ForkliftController;
 import com.example.forkliftrestserver.model.Forklift;
 import com.example.forkliftrestserver.service.ForkliftService;
-import com.example.forkliftrestserver.service.SemaphoreService;
+import com.example.forkliftrestserver.service.RegionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ class ForkliftRestServerApplicationTests {
 
         @Test
         void updateTests() {
-            ForkliftController controller = new ForkliftController(new ForkliftService(), new SemaphoreService());
+            ForkliftController controller = new ForkliftController(new ForkliftService(), new RegionService());
             Forklift forklift = new Forklift(30, new Point(50, 50));
             ResponseEntity<Forklift> response = controller.postForklift(forklift);
             assertEquals(new ResponseEntity<>(HttpStatus.CREATED), response);

@@ -1,16 +1,14 @@
 package com.example.forkliftrestserver.controller;
 
 import com.example.forkliftrestserver.model.Forklift;
-import com.example.forkliftrestserver.model.Semaphore;
-import com.example.forkliftrestserver.model.SemaphoreList;
+import com.example.forkliftrestserver.model.Region;
 import com.example.forkliftrestserver.service.ForkliftService;
-import com.example.forkliftrestserver.service.SemaphoreService;
+import com.example.forkliftrestserver.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +16,12 @@ import java.util.Map;
 public class ForkliftController {
 
     private ForkliftService forkliftService;
-    private SemaphoreService semaphoreService;
+    private RegionService regionService;
 
     @Autowired
-    public ForkliftController(ForkliftService forkliftService, SemaphoreService semaphoreService) {
+    public ForkliftController(ForkliftService forkliftService, RegionService regionService) {
         this.forkliftService = forkliftService;
-        this.semaphoreService = semaphoreService;
+        this.regionService = regionService;
     }
 
     @GetMapping("/all")
@@ -42,22 +40,15 @@ public class ForkliftController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<Forklift> postForklift() {
-        Forklift forklift = new Forklift(2, new Point(30, 30));
-        forkliftService.addForklift(forklift);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
     @GetMapping("/semaphores")
-    public List<Semaphore> getSemaphoreList() {
-        return semaphoreService.getSemaphoreList();
+    public List<Region> getSemaphoreList() {
+        return regionService.getSemaphoreList();
     }
 
     @PostMapping("/getPermission")
     public ResponseEntity<Forklift> postForkliftAndCheckSemaphores(@RequestBody Forklift forklift) {
         forkliftService.addForklift(forklift);
-        boolean hasPermission = semaphoreService.getPermission(forklift);
+        boolean hasPermission = regionService.getPermission(forklift);
         if (hasPermission) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {

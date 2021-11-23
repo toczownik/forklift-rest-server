@@ -1,8 +1,8 @@
 package com.example.forkliftrestserver.service;
 
 import com.example.forkliftrestserver.model.Forklift;
-import com.example.forkliftrestserver.model.Semaphore;
-import com.example.forkliftrestserver.model.SemaphoreList;
+import com.example.forkliftrestserver.model.Region;
+import com.example.forkliftrestserver.model.RegionList;
 import org.springframework.stereotype.Service;
 
 import org.yaml.snakeyaml.TypeDescription;
@@ -13,29 +13,29 @@ import java.net.URL;
 import java.util.List;
 
 @Service
-public class SemaphoreService {
-    private SemaphoreList semaphoreList;
+public class RegionService {
+    private RegionList regionList;
 
-    public SemaphoreService() {
+    public RegionService() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL resource = classLoader.getResource("static/config.yml");
-        Constructor semaphoreListConstructor = new Constructor(SemaphoreList.class);
-        TypeDescription semaphoreDescription = new TypeDescription(Semaphore.class);
-        semaphoreDescription.addPropertyParameters("semaphores", Semaphore.class, Object.class);
+        Constructor semaphoreListConstructor = new Constructor(RegionList.class);
+        TypeDescription semaphoreDescription = new TypeDescription(Region.class);
+        semaphoreDescription.addPropertyParameters("semaphores", Region.class, Object.class);
         semaphoreListConstructor.addTypeDescription(semaphoreDescription);
         Yaml yaml = new Yaml();
         try {
-            semaphoreList = yaml.load(resource.openStream());
+            regionList = yaml.load(resource.openStream());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public boolean getPermission(Forklift forklift) {
-        return semaphoreList.isForkliftMovementAllowed(forklift);
+        return regionList.isForkliftMovementAllowed(forklift);
     }
 
-    public List<Semaphore> getSemaphoreList() {
-        return semaphoreList.getSemaphores();
+    public List<Region> getSemaphoreList() {
+        return regionList.getRegions();
     }
 }

@@ -2,18 +2,20 @@ package com.example.forkliftrestserver.model;
 
 import java.awt.*;
 
-public class Semaphore {
+public class Region {
     private int id;
+    // TODO: Polygon nie działa poprawnie, potrzebna nowa klasa
     private Polygon quad;
-    private Forklift forklift;
+    private int forkliftSerialNumber;
 
-    public Semaphore(int id, Polygon quad) {
+    public Region(int id, Polygon quad) {
         this.id = id;
         this.quad = quad;
-        forklift = null;
+        forkliftSerialNumber = -1;
     }
 
-    public Semaphore() {}
+    public Region() {
+    }
 
     public boolean isForkliftInside(Point point) {
         return quad.contains(point);
@@ -27,12 +29,12 @@ public class Semaphore {
         this.id = id;
     }
 
-    public Forklift getForklift() {
-        return forklift;
+    public int getForkliftSerialNumber() {
+        return forkliftSerialNumber;
     }
 
-    public void setForklift(Forklift forklift) {
-        this.forklift = forklift;
+    public void setForkliftSerialNumber(int forkliftSerialNumber) {
+        this.forkliftSerialNumber = forkliftSerialNumber;
     }
 
     public Polygon getQuad() {

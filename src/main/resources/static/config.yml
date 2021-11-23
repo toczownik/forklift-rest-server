@@ -1,5 +1,5 @@
-!!com.example.forkliftrestserver.model.SemaphoreList
-semaphores:
+!!com.example.forkliftrestserver.model.RegionList
+regions:
   - id: 2
     quad:
       npoints: 4
@@ -9,4 +9,4 @@ semaphores:
     quad:
       npoints: 4
       xpoints: [ 100, 100, 110, 110 ]
-      ypoints: [ 100, 110, 110, 100 ]
+      ypoints: [ 101, 111, 110, 100 ]
