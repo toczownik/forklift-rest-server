@@ -1,12 +1,18 @@
 !!com.example.forkliftrestserver.model.RegionList
 regions:
-  - id: 2
-    quad:
-      npoints: 4
-      xpoints: [0, 0, 10, 10]
-      ypoints: [0, 10, 10, 0]
-  - id: 5
-    quad:
-      npoints: 4
-      xpoints: [ 100, 100, 110, 110 ]
-      ypoints: [ 101, 111, 110, 100 ]
+  - area:
+      points:
+        - {x: 50, y: 50}
+        - {x: 50, y: 55}
+        - {x: 55, y: 55}
+        - {x: 55, y: 50}
+    forkliftSerialNumber: -1
+    id: 10
+  - area:
+      points:
+        - {x: 20, y: 20}
+        - {x: 20, y: 25}
+        - {x: 25, y: 25}
+        - {x: 25, y: 20}
+    forkliftSerialNumber: -1
+    id: 5

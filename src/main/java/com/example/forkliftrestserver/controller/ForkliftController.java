@@ -47,9 +47,9 @@ public class ForkliftController {
 
     @PostMapping("/getPermission")
     public ResponseEntity<Forklift> postForkliftAndCheckSemaphores(@RequestBody Forklift forklift) {
-        forkliftService.addForklift(forklift);
         boolean hasPermission = regionService.getPermission(forklift);
         if (hasPermission) {
+            forkliftService.addForklift(forklift);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -4,13 +4,12 @@ import java.awt.*;
 
 public class Region {
     private int id;
-    // TODO: Polygon nie działa poprawnie, potrzebna nowa klasa
-    private Polygon quad;
+    private Area area;
     private int forkliftSerialNumber;
 
-    public Region(int id, Polygon quad) {
+    public Region(int id, Area area) {
         this.id = id;
-        this.quad = quad;
+        this.area = area;
         forkliftSerialNumber = -1;
     }
 
@@ -18,7 +17,7 @@ public class Region {
     }
 
     public boolean isForkliftInside(Point point) {
-        return quad.contains(point);
+        return area.doesContain(point);
     }
 
     public int getId() {
@@ -37,11 +36,11 @@ public class Region {
         this.forkliftSerialNumber = forkliftSerialNumber;
     }
 
-    public Polygon getQuad() {
-        return quad;
+    public Area getArea() {
+        return area;
     }
 
-    public void setQuad(Polygon quad) {
-        this.quad = quad;
+    public void setArea(Area area) {
+        this.area = area;
     }
 }

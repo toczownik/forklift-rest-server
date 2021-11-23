@@ -1,11 +1,16 @@
 package com.example.forkliftrestserver.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RegionList {
     private List<Region> regions;
+
+    public RegionList() {
+        regions = new ArrayList<>();
+    }
 
     public List<Region> getRegions() {
         return regions;
@@ -39,9 +44,6 @@ public class RegionList {
             }
         }
         return true;
-    }
-
-    public RegionList() {
     }
 
     public RegionList(List<Region> regions) {
