@@ -1,6 +1,19 @@
 package com.example.forkliftrestserver.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Entity;
 import java.awt.*;
+
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 
 public class Region {
     private int id;
@@ -13,34 +26,7 @@ public class Region {
         forkliftSerialNumber = -1;
     }
 
-    public Region() {
-    }
-
     public boolean isForkliftInside(Point point) {
         return area.doesContain(point);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getForkliftSerialNumber() {
-        return forkliftSerialNumber;
-    }
-
-    public void setForkliftSerialNumber(int forkliftSerialNumber) {
-        this.forkliftSerialNumber = forkliftSerialNumber;
-    }
-
-    public Area getArea() {
-        return area;
-    }
-
-    public void setArea(Area area) {
-        this.area = area;
     }
 }

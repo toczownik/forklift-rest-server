@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8" http-equiv="refresh" content="1">
+    <title>Synchronization system</title>
+</head>
+<body>
+<div align="center">
+    <h1>System synchronizacji współpracy wielu wózków</h1>
+    <table border="1" cellpadding="10">
+        <thead>
+        <tr>
+            <td>Region</td>
+            <td>Forklift ID</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="region : ${regions}">
+            <td th:text="${region.id}">id</td>
+            <td th:text="${region.forkliftSerialNumber}">forkliftSerialNumber</td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
