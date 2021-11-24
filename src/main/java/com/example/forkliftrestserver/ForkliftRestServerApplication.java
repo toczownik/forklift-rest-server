@@ -8,6 +8,8 @@ public class ForkliftRestServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ForkliftRestServerApplication.class, args);
+
+
     }
 
 }
