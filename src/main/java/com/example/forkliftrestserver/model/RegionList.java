@@ -46,6 +46,14 @@ public class RegionList {
         return true;
     }
 
+    public void freeAssignedRegions(int serialNumber) {
+        for (Region region: regions) {
+            if (region.getForkliftSerialNumber() == serialNumber) {
+                region.setForkliftSerialNumber(-1);
+            }
+        }
+    }
+
     public RegionList(List<Region> regions) {
         this.regions = regions;
     }

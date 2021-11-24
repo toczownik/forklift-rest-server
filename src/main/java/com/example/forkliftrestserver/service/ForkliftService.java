@@ -1,15 +1,12 @@
 package com.example.forkliftrestserver.service;
 
 import com.example.forkliftrestserver.model.Forklift;
-import com.example.forkliftrestserver.model.ForkliftState;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-@EnableScheduling
 public class ForkliftService {
     private Map<Integer, Forklift> forkliftMap = new HashMap<>();
 
@@ -30,19 +27,8 @@ public class ForkliftService {
         return forkliftMap.get(serialNumber);
     }
 
-    @Scheduled(initialDelay = 1000, fixedDelay = 1000)
-    public void checker() {
-        for (Forklift forklift:
-                forkliftMap.values()) {
-            long timeDiff = new Date().getTime() - forklift.getLastConnection().getTime();
-            if (timeDiff >= 5000) {
-                if (forklift.getState() == ForkliftState.INACTIVE && timeDiff > 30000) {
-                    removeForklift(forklift.getSerialNumber());
-                    // TODO: uwolnienie zajętych semaforów
-                }
-                forklift.setState(ForkliftState.INACTIVE);
-            }
-        }
+    public boolean forkliftExists(int serialNumber) {
+        return forkliftMap.containsKey(serialNumber);
     }
 
 }

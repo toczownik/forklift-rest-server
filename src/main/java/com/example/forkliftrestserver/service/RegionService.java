@@ -38,4 +38,8 @@ public class RegionService {
     public List<Region> getSemaphoreList() {
         return regionList.getRegions();
     }
+
+    public void freeRegions(int serialNumber) {
+        regionList.freeAssignedRegions(serialNumber);
+    }
 }

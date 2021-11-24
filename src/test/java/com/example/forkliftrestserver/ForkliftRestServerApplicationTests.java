@@ -37,7 +37,23 @@ class ForkliftRestServerApplicationTests {
 
             forklift.setCoords(new Point(52, 52));
             response = controller.postForkliftAndCheckSemaphores(forklift);
+            assertEquals(new ResponseEntity<>(HttpStatus.OK), response);
+
+            forklift.setSerialNumber(2);
+            response = controller.postForkliftAndCheckSemaphores(forklift);
             assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), response);
+        }
+
+        @Test
+        void deleteTests() {
+            ForkliftController controller = new ForkliftController(new ForkliftService(), new RegionService());
+            ResponseEntity<Forklift> response = controller.deleteForklift(1);
+            assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), response);
+
+            Forklift forklift = new Forklift(1, new Point(10, 10));
+            controller.postForklift(forklift);
+            response = controller.deleteForklift(1);
+            assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), response);
         }
 
 }
