@@ -35,7 +35,7 @@ public class RegionService {
         return regionList.isForkliftMovementAllowed(forklift);
     }
 
-    public List<Region> getSemaphoreList() {
+    public List<Region> getRegionsList() {
         return regionList.getRegions();
     }
 

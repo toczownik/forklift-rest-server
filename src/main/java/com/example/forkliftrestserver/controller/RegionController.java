@@ -18,7 +18,7 @@ public class RegionController {
     @RequestMapping("/region")
     public String regionPage(Model model){
 
-        List<Region> regionList = regionService.getSemaphoreList();
+        List<Region> regionList = regionService.getRegionsList();
 
         model.addAttribute("regions", regionList);
         return "region";

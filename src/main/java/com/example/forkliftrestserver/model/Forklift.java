@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Entity;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 
 public class Forklift {
     private int serialNumber = -1;
@@ -38,7 +40,6 @@ public class Forklift {
             takenRegionsList.remove(regionId);
         }
     }
-
     public void updateLastConnection() {
         lastConnection = new Date();
     }

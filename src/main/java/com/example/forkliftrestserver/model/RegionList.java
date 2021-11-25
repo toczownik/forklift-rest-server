@@ -1,24 +1,24 @@
 package com.example.forkliftrestserver.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class RegionList {
     private List<Region> regions;
-
-    public RegionList() {
-        regions = new ArrayList<>();
-    }
-
-    public List<Region> getRegions() {
-        return regions;
-    }
-
-    public void setRegions(List<Region> regions) {
-        this.regions = regions;
-    }
 
     public boolean isForkliftMovementAllowed(Forklift forklift) {
         Map<Integer, Integer> updates = new HashMap<>();
@@ -54,11 +54,7 @@ public class RegionList {
         }
     }
 
-    public RegionList(List<Region> regions) {
-        this.regions = regions;
-    }
-
-    public void addSemaphore(Region region) {
+    public void addRegion(Region region) {
         regions.add(region);
     }
 }

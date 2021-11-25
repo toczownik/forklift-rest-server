@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @EnableScheduling
+@RequestMapping("/forklift")
 public class ForkliftController {
 
     private ForkliftService forkliftService;
@@ -47,7 +48,7 @@ public class ForkliftController {
 
     @GetMapping("/semaphores")
     public List<Region> getSemaphoreList() {
-        return regionService.getSemaphoreList();
+        return regionService.getRegionsList();
     }
 
     @PostMapping("/getPermission")
