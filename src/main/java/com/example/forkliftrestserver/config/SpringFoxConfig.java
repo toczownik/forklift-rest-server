@@ -1,4 +1,4 @@
-package com.example.forkliftrestserver.cofig;
+package com.example.forkliftrestserver.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

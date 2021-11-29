@@ -1,9 +1,6 @@
 package com.example.forkliftrestserver.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import java.awt.*;
@@ -21,7 +18,7 @@ public class Forklift {
     private int serialNumber = -1;
     private Point coords = new Point();
     private ForkliftState state = ForkliftState.ACTIVE;
-    private Date lastConnection = new Date();
+    private Date lastConnection;
     private List<Integer> takenRegionsList = new ArrayList<>();
 
     public Forklift(int serialNumber, Point coords) {

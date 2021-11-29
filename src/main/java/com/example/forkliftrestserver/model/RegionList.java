@@ -20,7 +20,7 @@ import java.util.Map;
 public class RegionList {
     private List<Region> regions;
 
-    public boolean isForkliftMovementAllowed(Forklift forklift) {
+    synchronized public boolean isForkliftMovementAllowed(Forklift forklift, int regionID) {
         Map<Integer, Integer> updates = new HashMap<>();
         int semaphoreIndex = 0;
         for (Region region : regions) {

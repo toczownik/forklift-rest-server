@@ -19,10 +19,10 @@ public class RegionService {
     public RegionService() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL resource = classLoader.getResource("static/config.yml");
-        Constructor semaphoreListConstructor = new Constructor(RegionList.class);
-        TypeDescription semaphoreDescription = new TypeDescription(Region.class);
-        semaphoreDescription.addPropertyParameters("semaphores", Region.class, Object.class);
-        semaphoreListConstructor.addTypeDescription(semaphoreDescription);
+        Constructor regionListConstructor = new Constructor(RegionList.class);
+        TypeDescription regionDescription = new TypeDescription(Region.class);
+        regionDescription.addPropertyParameters("regions", Region.class, Object.class);
+        regionListConstructor.addTypeDescription(regionDescription);
         Yaml yaml = new Yaml();
         try {
             regionList = yaml.load(resource.openStream());
@@ -31,8 +31,8 @@ public class RegionService {
         }
     }
 
-    public boolean getPermission(Forklift forklift) {
-        return regionList.isForkliftMovementAllowed(forklift);
+    synchronized public boolean getPermission(Forklift forklift, int regionID) {
+        return regionList.isForkliftMovementAllowed(forklift, regionID);
     }
 
     public List<Region> getRegionsList() {

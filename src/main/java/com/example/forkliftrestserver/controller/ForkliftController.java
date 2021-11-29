@@ -6,6 +6,7 @@ import com.example.forkliftrestserver.model.Region;
 import com.example.forkliftrestserver.service.ForkliftService;
 import com.example.forkliftrestserver.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -52,8 +53,8 @@ public class ForkliftController {
     }
 
     @PostMapping("/getPermission")
-    public ResponseEntity<Forklift> postForkliftAndCheckSemaphores(@RequestBody Forklift forklift) {
-        boolean hasPermission = regionService.getPermission(forklift);
+    synchronized public ResponseEntity<Forklift> postForkliftAndCheckSemaphores(@RequestBody Forklift forklift, int regionID) {
+        boolean hasPermission = regionService.getPermission(forklift, regionID);
         if (hasPermission) {
             forkliftService.addForklift(forklift);
             return new ResponseEntity<>(HttpStatus.OK);
