@@ -1,8 +1,6 @@
 package com.example.forkliftrestserver.service;
 
-import com.example.forkliftrestserver.model.Forklift;
-import com.example.forkliftrestserver.model.Region;
-import com.example.forkliftrestserver.model.RegionList;
+import com.example.forkliftrestserver.model.*;
 import org.springframework.stereotype.Service;
 
 import org.yaml.snakeyaml.TypeDescription;
@@ -31,15 +29,15 @@ public class RegionService {
         }
     }
 
-    synchronized public boolean getPermission(Forklift forklift, int regionID) {
-        return regionList.isForkliftMovementAllowed(forklift, regionID);
+    synchronized public PermissionMessage getPermission(Forklift forklift, Region region) {
+        return regionList.isForkliftMovementAllowed(forklift, region);
     }
 
     public List<Region> getRegionsList() {
         return regionList.getRegions();
     }
 
-    public void freeRegions(int serialNumber) {
+    public void freeRegions(String serialNumber) {
         regionList.freeAssignedRegions(serialNumber);
     }
 

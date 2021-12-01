@@ -15,13 +15,13 @@ import java.util.List;
 @Entity
 
 public class Forklift {
-    private int serialNumber = -1;
+    private String serialNumber = "";
     private Point coords = new Point();
     private ForkliftState state = ForkliftState.ACTIVE;
     private Date lastConnection;
     private List<Integer> takenRegionsList = new ArrayList<>();
 
-    public Forklift(int serialNumber, Point coords) {
+    public Forklift(String serialNumber, Point coords) {
         this.serialNumber = serialNumber;
         this.coords = coords;
     }

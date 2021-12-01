@@ -8,9 +8,9 @@ import java.util.*;
 
 @Service
 public class ForkliftService {
-    private Map<Integer, Forklift> forkliftMap = new HashMap<>();
+    private Map<String, Forklift> forkliftMap = new HashMap<>();
 
-    public Map<Integer, Forklift> getForklifts() {
+    public Map<String, Forklift> getForklifts() {
         return forkliftMap;
     }
 
@@ -19,15 +19,15 @@ public class ForkliftService {
         forkliftMap.put(forklift.getSerialNumber(), forklift);
     }
 
-    public void removeForklift(int id) {
+    public void removeForklift(String id) {
         forkliftMap.remove(id);
     }
 
-    public Forklift getForkliftBySerialNumber(int serialNumber) {
+    public Forklift getForkliftBySerialNumber(String serialNumber) {
         return forkliftMap.get(serialNumber);
     }
 
-    public boolean forkliftExists(int serialNumber) {
+    public boolean forkliftExists(String serialNumber) {
         return forkliftMap.containsKey(serialNumber);
     }
 

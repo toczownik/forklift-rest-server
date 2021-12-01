@@ -1,8 +1,6 @@
 package com.example.forkliftrestserver.controller;
 
-import com.example.forkliftrestserver.model.Forklift;
-import com.example.forkliftrestserver.model.ForkliftState;
-import com.example.forkliftrestserver.model.Region;
+import com.example.forkliftrestserver.model.*;
 import com.example.forkliftrestserver.service.ForkliftService;
 import com.example.forkliftrestserver.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +28,12 @@ public class ForkliftController {
     }
 
     @GetMapping("/all")
-    public Map<Integer, Forklift> getForklifts() {
+    public Map<String, Forklift> getForklifts() {
         return forkliftService.getForklifts();
     }
 
     @GetMapping("/{serialNumber}")
-    public Forklift getForklift(@PathVariable("serialNumber") int serialNumber) {
+    public Forklift getForklift(@PathVariable("serialNumber") String serialNumber) {
         return forkliftService.getForkliftBySerialNumber(serialNumber);
     }
 
@@ -52,18 +49,23 @@ public class ForkliftController {
     }
 
     @PostMapping("/getPermission")
-    synchronized public ResponseEntity<Forklift> postForkliftAndCheckSemaphores(@RequestBody Forklift forklift, int regionID) {
-        boolean hasPermission = regionService.getPermission(forklift, regionID);
-        if (hasPermission) {
-            forkliftService.addForklift(forklift);
+    synchronized public ResponseEntity<String> postForkliftAndCheckSemaphores(@RequestBody RegionForklift regionForklift) {
+        PermissionMessage permission = regionService.getPermission(regionForklift.getForklift(), regionForklift.getRegion());
+        if (permission.getStatus() == RegionState.SUCCESS) {
+            forkliftService.addForklift(regionForklift.getForklift());
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
+        } else if(permission.getStatus() == RegionState.OCCUPIED){
+            return new ResponseEntity<>(permission.getForkliftSerialNumber(), HttpStatus.BAD_REQUEST);
+        }else if(permission.getStatus() == RegionState.LACK){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{serialNumber}")
-    public ResponseEntity<Forklift> deleteForklift(@PathVariable("serialNumber") int serialNumber) {
+    public ResponseEntity<Forklift> deleteForklift(@PathVariable("serialNumber") String serialNumber) {
         if (forkliftService.forkliftExists(serialNumber)) {
             regionService.freeRegions(serialNumber);
             forkliftService.removeForklift(serialNumber);

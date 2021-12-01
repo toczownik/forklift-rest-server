@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Getter
@@ -20,36 +17,27 @@ import java.util.Map;
 public class RegionList {
     private List<Region> regions;
 
-    synchronized public boolean isForkliftMovementAllowed(Forklift forklift, int regionID) {
-        Map<Integer, Integer> updates = new HashMap<>();
-        int semaphoreIndex = 0;
+    synchronized public PermissionMessage isForkliftMovementAllowed(Forklift forklift, Region regionFromClient) {
         for (Region region : regions) {
             if (region.isForkliftInside(forklift.getCoords())) {
-                if (region.getForkliftSerialNumber() == -1) {
-                    updates.put(semaphoreIndex, forklift.getSerialNumber());
-                } else if (!(region.getForkliftSerialNumber() == forklift.getSerialNumber())) {
-                    return false;
+                if (region.getForkliftSerialNumber().equals("")){
+                    if(region.isTheSame(regionFromClient)){
+                        region.setForkliftSerialNumber(forklift.getSerialNumber());
+                        return new PermissionMessage(RegionState.SUCCESS, region.getForkliftSerialNumber());
+                    }
+                } else {
+                    forklift.setState(ForkliftState.WAITING);
+                    return new PermissionMessage(RegionState.OCCUPIED, region.getForkliftSerialNumber());
                 }
-            } else if (region.getForkliftSerialNumber() == forklift.getSerialNumber()) {
-                updates.put(semaphoreIndex, null);
-            }
-            semaphoreIndex++;
-        }
-        for (Integer semaphoreId:
-             updates.keySet()) {
-            if (updates.get(semaphoreId) == null) {
-                regions.get(semaphoreId).setForkliftSerialNumber(-1);
-            } else {
-                regions.get(semaphoreId).setForkliftSerialNumber(forklift.getSerialNumber());
             }
         }
-        return true;
+        return new PermissionMessage(RegionState.OCCUPIED, "");
     }
 
-    public void freeAssignedRegions(int serialNumber) {
-        for (Region region: regions) {
-            if (region.getForkliftSerialNumber() == serialNumber) {
-                region.setForkliftSerialNumber(-1);
+    public void freeAssignedRegions(String serialNumber) {
+        for (Region region : regions) {
+            if (region.getForkliftSerialNumber().equals(serialNumber)) {
+                region.setForkliftSerialNumber("");
             }
         }
     }

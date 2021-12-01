@@ -1,7 +1,20 @@
 !!com.example.forkliftrestserver.model.RegionList
    regions:
-     - id: 2
+     - id: 1
        polygon:
          npoints: 4
          xpoints: [ 100, 100, 110, 110 ]
          ypoints: [ 100, 110, 110, 100 ]
+       forkliftSerialNumber: ""
+     - id: 2
+       polygon:
+         npoints: 4
+         xpoints: [ 50, 50, 55, 55 ]
+         ypoints: [ 50, 55, 55, 50 ]
+       forkliftSerialNumber: ""
+     - id: 3
+       polygon:
+         npoints: 4
+         xpoints: [ 30, 30, 33, 33 ]
+         ypoints: [ 30, 33, 33, 30 ]
+       forkliftSerialNumber: ""
