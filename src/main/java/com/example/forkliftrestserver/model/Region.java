@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.Entity;
 import java.awt.*;
+import javax.persistence.Entity;
 
 
 @Getter
@@ -17,16 +16,17 @@ import java.awt.*;
 
 public class Region {
     private int id;
-    private Area area;
+    private Polygon polygon;
     private int forkliftSerialNumber;
 
-    public Region(int id, Area area) {
+    public Region(int id, Polygon polygon) {
         this.id = id;
-        this.area = area;
+        //this.area = area;
         forkliftSerialNumber = -1;
+        this.polygon = polygon;
     }
 
     public boolean isForkliftInside(Point point) {
-        return area.doesContain(point);
+        return polygon.contains(point);
     }
 }

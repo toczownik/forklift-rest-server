@@ -1,9 +1,9 @@
 package com.example.forkliftrestserver.model;
 
 import lombok.*;
+import java.awt.*;
 
 import javax.persistence.Entity;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

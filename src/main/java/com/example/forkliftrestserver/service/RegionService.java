@@ -42,4 +42,8 @@ public class RegionService {
     public void freeRegions(int serialNumber) {
         regionList.freeAssignedRegions(serialNumber);
     }
+
+    public void addRegion(Region region) {
+        regionList.addRegion(region);
+    }
 }

@@ -1,50 +1,7 @@
 !!com.example.forkliftrestserver.model.RegionList
-regions:
-  - area:
-      points:
-        - {x: 50, y: 50}
-        - {x: 50, y: 55}
-        - {x: 55, y: 55}
-        - {x: 55, y: 50}
-    forkliftSerialNumber: -1
-    id: 1
-  - area:
-      points:
-        - {x: 20, y: 20}
-        - {x: 20, y: 25}
-        - {x: 25, y: 25}
-        - {x: 25, y: 20}
-    forkliftSerialNumber: -1
-    id: 2
-  - area:
-      points:
-      - {x: 30, y: 30}
-      - {x: 30, y: 35}
-      - {x: 35, y: 35}
-      - {x: 35, y: 30}
-    forkliftSerialNumber: -1
-    id: 3
-  - area:
-      points:
-      - {x: 10, y: 10}
-      - {x: 10, y: 15}
-      - {x: 15, y: 15}
-      - {x: 15, y: 10}
-    forkliftSerialNumber: -1
-    id: 4
-  - area:
-      points:
-      - {x: 130, y: 130}
-      - {x: 130, y: 135}
-      - {x: 135, y: 135}
-      - {x: 135, y: 130}
-    forkliftSerialNumber: -1
-    id: 5
-  - area:
-      points:
-      - {x: 100, y: 100}
-      - {x: 100, y: 150}
-      - {x: 150, y: 150}
-      - {x: 150, y: 100}
-    forkliftSerialNumber: -1
-    id: 6
+   regions:
+     - id: 2
+       polygon:
+         npoints: 4
+         xpoints: [ 100, 100, 110, 110 ]
+         ypoints: [ 100, 110, 110, 100 ]
