@@ -21,6 +21,7 @@ public class ForkliftService {
     }
 
     public void removeForklift(String id) {
+        forkliftMap.get(id).setState(ForkliftState.INACTIVE);
         forkliftMap.remove(id);
     }
 

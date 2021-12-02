@@ -32,15 +32,15 @@ class ForkliftRestServerApplicationTests {
 //            assertEquals(forkliftMap, testMap);
 //
 //            forklift = new Forklift(1, new Point(102, 102));
-//            response = controller.postForkliftAndCheckSemaphores(forklift);
+//            response = controller.getPremissionToRegion(forklift);
 //            assertEquals(new ResponseEntity<>(HttpStatus.OK), response);
 //
 //            forklift.setCoords(new Point(52, 52));
-//            response = controller.postForkliftAndCheckSemaphores(forklift);
+//            response = controller.getPremissionToRegion(forklift);
 //            assertEquals(new ResponseEntity<>(HttpStatus.OK), response);
 //
 //            forklift.setSerialNumber(2);
-//            response = controller.postForkliftAndCheckSemaphores(forklift);
+//            response = controller.getPremissionToRegion(forklift);
 //            assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), response);
 //        }
 //

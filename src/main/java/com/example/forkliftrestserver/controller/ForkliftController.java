@@ -49,7 +49,7 @@ public class ForkliftController {
     }
 
     @PostMapping("/getPermission")
-    synchronized public ResponseEntity<String> postForkliftAndCheckSemaphores(@RequestBody RegionForklift regionForklift) {
+    synchronized public ResponseEntity<String> getPremissionToRegion(@RequestBody RegionForklift regionForklift) {
         PermissionMessage permission = regionService.getPermission(regionForklift.getForklift(), regionForklift.getRegion());
         if (permission.getStatus() == RegionState.SUCCESS) {
             forkliftService.updateForklift(regionForklift.getForklift());
@@ -62,6 +62,11 @@ public class ForkliftController {
         else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/leaveTheRegion")
+    synchronized public ResponseEntity<Forklift> leaveTheRegion(@RequestBody RegionForklift regionForklift) {
+        return regionService.leaveRegionByForklift(regionForklift.getForklift(), regionForklift.getRegion());
     }
 
     @DeleteMapping("/{serialNumber}")
@@ -86,7 +91,8 @@ public class ForkliftController {
                         forkliftService.removeForklift(forklift.getSerialNumber());
                     } else if (timeDiff > 30000) {
                         regionService.freeRegions(forklift.getSerialNumber());
-                        forkliftService.removeForklift(forklift.getSerialNumber());
+                        forkliftService.removeForklift(forklift.getSerialNumber()); // czy usuwamy od razu cały wózek z listy czy ustawiamy jako nieaktywny ?
+                        // zgodnie z założeniami mamy ustawić go na nieaktywny i zwolnić region
                     }
                 }
                 forklift.setState(ForkliftState.INACTIVE);

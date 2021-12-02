@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import javax.persistence.Entity;
 import java.util.List;
@@ -20,8 +22,8 @@ public class RegionList {
     synchronized public PermissionMessage isForkliftMovementAllowed(Forklift forklift, Region regionFromClient) {
         for (Region region : regions) {
             if (region.isForkliftInside(forklift.getCoords())) {
-                if (region.getForkliftSerialNumber().equals("")){
-                    if(region.isTheSame(regionFromClient)){
+                if (region.getForkliftSerialNumber().equals("") || region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
+                    if (region.isTheSame(regionFromClient)) {
                         region.setForkliftSerialNumber(forklift.getSerialNumber());
                         return new PermissionMessage(RegionState.SUCCESS, region.getForkliftSerialNumber());
                     }
@@ -44,5 +46,20 @@ public class RegionList {
 
     public void addRegion(Region region) {
         regions.add(region);
+    }
+
+//    do przeanalizowania i przetestowania !
+    public ResponseEntity<Forklift> leaveRegionByForklift(Forklift forklift, Region regionToLeave) {
+        for (Region region : regions) {
+            if (region.isTheSame(regionToLeave)) {
+                if (!region.isForkliftInside(forklift.getCoords()) && region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
+                    region.setForkliftSerialNumber("");
+                    return new ResponseEntity<>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+                }
+            }
+        }
+        return new ResponseEntity <>(HttpStatus.NOT_FOUND);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.forkliftrestserver.service;
 
 import com.example.forkliftrestserver.model.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.yaml.snakeyaml.TypeDescription;
@@ -43,5 +44,9 @@ public class RegionService {
 
     public void addRegion(Region region) {
         regionList.addRegion(region);
+    }
+
+    public ResponseEntity<Forklift> leaveRegionByForklift(Forklift forklift, Region regionToLeave) {
+        return regionList.leaveRegionByForklift(forklift, regionToLeave);
     }
 }
