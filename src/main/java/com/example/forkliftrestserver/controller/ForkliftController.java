@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,21 +37,22 @@ public class ForkliftController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Forklift> postForklift(@RequestBody Forklift forklift) {
-        forkliftService.addForklift(forklift);
+    public ResponseEntity<Forklift> updateForklift(@RequestBody Forklift forklift) {
+        forkliftService.updateForklift(forklift);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/semaphores")
-    public List<Region> getSemaphoreList() {
-        return regionService.getRegionsList();
+    @PostMapping("/add")
+    public ResponseEntity<Forklift> addForklift(@RequestBody Forklift forklift) {
+        forkliftService.addForklift(forklift);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/getPermission")
     synchronized public ResponseEntity<String> postForkliftAndCheckSemaphores(@RequestBody RegionForklift regionForklift) {
         PermissionMessage permission = regionService.getPermission(regionForklift.getForklift(), regionForklift.getRegion());
         if (permission.getStatus() == RegionState.SUCCESS) {
-            forkliftService.addForklift(regionForklift.getForklift());
+            forkliftService.updateForklift(regionForklift.getForklift());
             return new ResponseEntity<>(HttpStatus.OK);
         } else if(permission.getStatus() == RegionState.OCCUPIED){
             return new ResponseEntity<>(permission.getForkliftSerialNumber(), HttpStatus.BAD_REQUEST);
@@ -74,12 +74,6 @@ public class ForkliftController {
         else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @PostMapping("/region")
-    public ResponseEntity<Region> addRegion(@RequestBody Region region) {
-        regionService.addRegion(region);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Scheduled(initialDelay = 1000, fixedDelay = 1000)

@@ -23,7 +23,7 @@ class ForkliftRestServerApplicationTests {
 //        void updateTests() {
 //            ForkliftController controller = new ForkliftController(new ForkliftService(), new RegionService());
 //            Forklift forklift = new Forklift(30, new Point(50, 50));
-//            ResponseEntity<Forklift> response = controller.postForklift(forklift);
+//            ResponseEntity<Forklift> response = controller.updateForklift(forklift);
 //            assertEquals(new ResponseEntity<>(HttpStatus.CREATED), response);
 //
 //            Map<Integer, Forklift> forkliftMap = controller.getForklifts();
@@ -51,7 +51,7 @@ class ForkliftRestServerApplicationTests {
 //            assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), response);
 //
 //            Forklift forklift = new Forklift(1, new Point(10, 10));
-//            controller.postForklift(forklift);
+//            controller.updateForklift(forklift);
 //            response = controller.deleteForklift(1);
 //            assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), response);
 //        }

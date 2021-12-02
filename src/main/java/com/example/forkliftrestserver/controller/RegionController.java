@@ -1,26 +1,37 @@
 package com.example.forkliftrestserver.controller;
 
 import com.example.forkliftrestserver.model.Region;
+import com.example.forkliftrestserver.service.ForkliftService;
 import com.example.forkliftrestserver.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/region")
 public class RegionController {
 
+    private ForkliftService forkliftService;
+    private RegionService regionService;
+
     @Autowired
-    RegionService regionService;
-
-    @RequestMapping("/region")
-    public String regionPage(Model model){
-
-        List<Region> regionList = regionService.getRegionsList();
-
-        model.addAttribute("regions", regionList);
-        return "region";
+    public RegionController(ForkliftService forkliftService, RegionService regionService) {
+        this.forkliftService = forkliftService;
+        this.regionService = regionService;
     }
+
+    @GetMapping("/getRegions")
+    public List<Region> getRegionList() {
+        return regionService.getRegionsList();
+    }
+
+    @PostMapping("/region")
+    public ResponseEntity<Region> addRegion(@RequestBody Region region) {
+        regionService.addRegion(region);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

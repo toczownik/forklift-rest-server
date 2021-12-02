@@ -1,6 +1,7 @@
 package com.example.forkliftrestserver.service;
 
 import com.example.forkliftrestserver.model.Forklift;
+import com.example.forkliftrestserver.model.ForkliftState;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class ForkliftService {
         return forkliftMap;
     }
 
-    public void addForklift(Forklift forklift) {
+    public void updateForklift(Forklift forklift) {
         forklift.updateLastConnection();
         forkliftMap.put(forklift.getSerialNumber(), forklift);
     }
@@ -31,4 +32,9 @@ public class ForkliftService {
         return forkliftMap.containsKey(serialNumber);
     }
 
+    public void addForklift(Forklift forklift) {
+        forklift.setLastConnection(new Date());
+        forklift.setState(ForkliftState.ACTIVE);
+        forkliftMap.put(forklift.getSerialNumber(), forklift);
+    }
 }
