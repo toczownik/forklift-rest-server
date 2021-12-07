@@ -49,7 +49,7 @@ public class ForkliftController {
     }
 
     @PostMapping("/getPermission")
-    synchronized public ResponseEntity<String> getPremissionToRegion(@RequestBody RegionForklift regionForklift) {
+    synchronized public ResponseEntity<String> getPermissionToRegion(@RequestBody RegionForklift regionForklift) {
         PermissionMessage permission = regionService.getPermission(regionForklift.getForklift(), regionForklift.getRegion());
         if (permission.getStatus() == RegionState.SUCCESS) {
             forkliftService.updateForklift(regionForklift.getForklift());
