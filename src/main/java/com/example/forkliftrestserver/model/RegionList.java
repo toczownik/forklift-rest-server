@@ -48,7 +48,6 @@ public class RegionList {
         regions.add(region);
     }
 
-//    do przeanalizowania i przetestowania !
     public ResponseEntity<Forklift> leaveRegionByForklift(Forklift forklift, Region regionToLeave) {
         for (Region region : regions) {
             if (region.isTheSame(regionToLeave)) {

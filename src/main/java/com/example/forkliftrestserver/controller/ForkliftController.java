@@ -69,16 +69,21 @@ public class ForkliftController {
 
     @PostMapping("/getPermission")
     synchronized public ResponseEntity<String> getPermissionToRegion(@RequestBody RegionForklift regionForklift) {
+        if (regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
+                regionForklift.getForklift().getCoords() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         PermissionMessage permission = regionService.getPermission(regionForklift.getForklift(), regionForklift.getRegion());
+
         if (permission.getStatus() == RegionState.SUCCESS) {
             forkliftService.updateForklift(regionForklift.getForklift());
             return new ResponseEntity<>(HttpStatus.OK);
-        } else if(permission.getStatus() == RegionState.OCCUPIED){
-            return new ResponseEntity<>(permission.getForkliftSerialNumber(), HttpStatus.BAD_REQUEST);
-        } else if(permission.getStatus() == RegionState.LACK){
+        } else if (permission.getStatus() == RegionState.OCCUPIED) {
+            return new ResponseEntity<>(permission.getForkliftSerialNumber(), HttpStatus.FORBIDDEN);
+        } else if (permission.getStatus() == RegionState.LACK) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

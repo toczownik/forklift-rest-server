@@ -1,9 +1,7 @@
 package com.example.forkliftrestserver;
 
 import com.example.forkliftrestserver.controller.ForkliftController;
-import com.example.forkliftrestserver.model.Forklift;
-import com.example.forkliftrestserver.model.Region;
-import com.example.forkliftrestserver.model.RegionForklift;
+import com.example.forkliftrestserver.model.*;
 import com.example.forkliftrestserver.service.ForkliftService;
 import com.example.forkliftrestserver.service.RegionService;
 import org.junit.jupiter.api.Test;
@@ -72,5 +70,4 @@ class ForkliftRestServerApplicationTests {
         regionForklift.setRegion(region);
         assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
     }
-
 }
