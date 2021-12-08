@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest
-class ForkliftRestServerApplicationTests {
+class ForkliftControllerTests {
     RegionService regionService = new RegionService();
     ForkliftController forkliftController = new ForkliftController(new ForkliftService(), regionService);
 
