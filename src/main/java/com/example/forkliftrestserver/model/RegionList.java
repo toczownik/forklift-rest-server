@@ -33,7 +33,7 @@ public class RegionList {
                 }
             }
         }
-        return new PermissionMessage(RegionState.OCCUPIED, "");
+        return new PermissionMessage(RegionState.LACK, "");
     }
 
     public void freeAssignedRegions(String serialNumber) {

@@ -37,6 +37,7 @@ public class Forklift {
             takenRegionsList.remove(regionId);
         }
     }
+
     public void updateLastConnection() {
         lastConnection = new Date();
     }

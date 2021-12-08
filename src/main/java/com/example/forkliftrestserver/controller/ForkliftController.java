@@ -43,8 +43,27 @@ public class ForkliftController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Forklift> addForklift(@RequestBody Forklift forklift) {
-        forkliftService.addForklift(forklift);
+    synchronized public ResponseEntity<Forklift> addForklift(@RequestBody RegionForklift regionForklift) {
+        if (regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
+                regionForklift.getForklift().getCoords() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (regionForklift.getRegion() != null) {
+            PermissionMessage permission = regionService.getPermission(
+                    regionForklift.getForklift(), regionForklift.getRegion());
+            switch (permission.getStatus()) {
+                case SUCCESS:
+                    break;
+                case OCCUPIED:
+                    forkliftService.addForklift(regionForklift.getForklift(), ForkliftState.WAITING);
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                case LACK:
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                default:
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        forkliftService.addForklift(regionForklift.getForklift(), ForkliftState.ACTIVE);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -56,7 +75,7 @@ public class ForkliftController {
             return new ResponseEntity<>(HttpStatus.OK);
         } else if(permission.getStatus() == RegionState.OCCUPIED){
             return new ResponseEntity<>(permission.getForkliftSerialNumber(), HttpStatus.BAD_REQUEST);
-        }else if(permission.getStatus() == RegionState.LACK){
+        } else if(permission.getStatus() == RegionState.LACK){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {

@@ -33,9 +33,11 @@ public class ForkliftService {
         return forkliftMap.containsKey(serialNumber);
     }
 
-    public void addForklift(Forklift forklift) {
+    public void addForklift(Forklift forklift, ForkliftState state) {
         forklift.setLastConnection(new Date());
-        forklift.setState(ForkliftState.ACTIVE);
-        forkliftMap.put(forklift.getSerialNumber(), forklift);
+        forklift.setState(state);
+        if (!forkliftMap.containsKey(forklift.getSerialNumber())) {
+            forkliftMap.put(forklift.getSerialNumber(), forklift);
+        }
     }
 }

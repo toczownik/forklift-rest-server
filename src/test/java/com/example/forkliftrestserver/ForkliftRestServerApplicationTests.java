@@ -2,6 +2,8 @@ package com.example.forkliftrestserver;
 
 import com.example.forkliftrestserver.controller.ForkliftController;
 import com.example.forkliftrestserver.model.Forklift;
+import com.example.forkliftrestserver.model.Region;
+import com.example.forkliftrestserver.model.RegionForklift;
 import com.example.forkliftrestserver.service.ForkliftService;
 import com.example.forkliftrestserver.service.RegionService;
 import org.junit.jupiter.api.Test;
@@ -10,50 +12,65 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest
 class ForkliftRestServerApplicationTests {
+    RegionService regionService = new RegionService();
+    ForkliftController forkliftController = new ForkliftController(new ForkliftService(), regionService);
 
-//        @Test
-//        void updateTests() {
-//            ForkliftController controller = new ForkliftController(new ForkliftService(), new RegionService());
-//            Forklift forklift = new Forklift(30, new Point(50, 50));
-//            ResponseEntity<Forklift> response = controller.updateForklift(forklift);
-//            assertEquals(new ResponseEntity<>(HttpStatus.CREATED), response);
-//
-//            Map<Integer, Forklift> forkliftMap = controller.getForklifts();
-//            Map<Integer, Forklift> testMap = new HashMap<>();
-//            testMap.put(forklift.getSerialNumber(), forklift);
-//            assertEquals(forkliftMap, testMap);
-//
-//            forklift = new Forklift(1, new Point(102, 102));
-//            response = controller.getPremissionToRegion(forklift);
-//            assertEquals(new ResponseEntity<>(HttpStatus.OK), response);
-//
-//            forklift.setCoords(new Point(52, 52));
-//            response = controller.getPremissionToRegion(forklift);
-//            assertEquals(new ResponseEntity<>(HttpStatus.OK), response);
-//
-//            forklift.setSerialNumber(2);
-//            response = controller.getPremissionToRegion(forklift);
-//            assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), response);
-//        }
-//
-//        @Test
-//        void deleteTests() {
-//            ForkliftController controller = new ForkliftController(new ForkliftService(), new RegionService());
-//            ResponseEntity<Forklift> response = controller.deleteForklift(1);
-//            assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), response);
-//
-//            Forklift forklift = new Forklift(1, new Point(10, 10));
-//            controller.updateForklift(forklift);
-//            response = controller.deleteForklift(1);
-//            assertEquals(new ResponseEntity<>(HttpStatus.NO_CONTENT), response);
-//        }
+    @Test
+    public void registrationOutsideRegion() {
+        RegionForklift regionForklift = new RegionForklift();
+        Forklift forklift = new Forklift("Mirek", new Point(10, 10));
+        regionForklift.setForklift(forklift);
+        regionForklift.setRegion(null);
+        assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.addForklift(regionForklift));
+        forklift.setCoords(new Point(20, 20));
+        regionForklift.setForklift(forklift);
+        assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.addForklift(regionForklift));
+
+        assertEquals(forkliftController.getForklift("Mirek"), forklift);
+        forklift.setSerialNumber(null);
+        regionForklift.setForklift(forklift);
+        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.addForklift(regionForklift));
+
+        forklift.setCoords(null);
+        regionForklift.setForklift(forklift);
+        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.addForklift(regionForklift));
+
+        regionForklift.setForklift(null);
+        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.addForklift(regionForklift));
+    }
+
+    @Test
+    public void registrationInsideRegion() {
+        RegionForklift regionForklift = new RegionForklift();
+        Forklift forklift1 = new Forklift("Mirek", new Point(53, 53));
+        regionForklift.setForklift(forklift1);
+        Region region = regionService.getRegionsList().get(0);
+        regionForklift.setRegion(region);
+        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
+        region = regionService.getRegionsList().get(1);
+        regionForklift.setRegion(region);
+        assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.addForklift(regionForklift));
+
+        Forklift forklift2 = new Forklift("Tymek", new Point(52, 52));
+        regionForklift.setForklift(forklift2);
+        assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), forkliftController.addForklift(regionForklift));
+
+        int[] xpoints = {200, 200, 210, 210};
+        int[] ypoints = {200, 210, 210, 200};
+        region.setPolygon(new Polygon(xpoints, ypoints, 4));
+        regionForklift.setRegion(region);
+        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
+
+        region = regionService.getRegionsList().get(0);
+        region.setId(2);
+        regionForklift.setRegion(region);
+        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
+    }
 
 }
