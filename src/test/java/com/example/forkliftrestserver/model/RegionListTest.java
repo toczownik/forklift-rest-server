@@ -1,6 +1,6 @@
 package com.example.forkliftrestserver.model;
 
-import com.example.forkliftrestserver.service.RegionService;
+import com.example.forkliftrestserver.service.RegionListService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RegionListTest {
 
-    private RegionService regionService = new RegionService();
+    private RegionListService regionListService = new RegionListService();
 
     @Test
     void isForkliftMovementAllowed() {
@@ -22,9 +22,9 @@ class RegionListTest {
         RegionForklift regionForklift = new RegionForklift();
         Forklift forklift = new Forklift("Mirek", new Point(105, 105));
         regionForklift.setForklift(forklift);
-        Region region = regionService.getRegionsList().get(0);
+        Region region = regionListService.getRegionsList().get(0);
         regionForklift.setRegion(region);
-        PermissionMessage message = regionService.getPermission(forklift, region);
+        PermissionMessage message = regionListService.getPermission(forklift, region);
         PermissionMessage expectedMessage = new PermissionMessage(RegionState.SUCCESS, forklift.getSerialNumber());
         assertEquals(expectedMessage.toString(), message.toString());
     }
@@ -34,10 +34,10 @@ class RegionListTest {
         RegionForklift regionForklift = new RegionForklift();
         Forklift forklift = new Forklift("Mirek", new Point(105, 105));
         regionForklift.setForklift(forklift);
-        Region region = regionService.getRegionsList().get(0);
+        Region region = regionListService.getRegionsList().get(0);
         region.setForkliftSerialNumber("Spark");
         regionForklift.setRegion(region);
-        PermissionMessage message = regionService.getPermission(forklift, region);
+        PermissionMessage message = regionListService.getPermission(forklift, region);
         PermissionMessage expectedMessage = new PermissionMessage(RegionState.OCCUPIED, region.getForkliftSerialNumber());
         assertEquals(expectedMessage.toString(), message.toString());
     }
@@ -47,9 +47,9 @@ class RegionListTest {
         RegionForklift regionForklift = new RegionForklift();
         Forklift forklift = new Forklift("Mirek", new Point(350, 350));
         regionForklift.setForklift(forklift);
-        Region region = regionService.getRegionsList().get(0);
+        Region region = regionListService.getRegionsList().get(0);
         regionForklift.setRegion(region);
-        PermissionMessage message = regionService.getPermission(forklift, region);
+        PermissionMessage message = regionListService.getPermission(forklift, region);
         PermissionMessage expectedMessage = new PermissionMessage(RegionState.LACK, "");
         assertEquals(expectedMessage.toString(), message.toString());
     }
@@ -67,11 +67,11 @@ class RegionListTest {
         RegionForklift regionForklift = new RegionForklift();
         Forklift forklift = new Forklift("Mirek", new Point(205, 205));
         regionForklift.setForklift(forklift);
-        Region region = regionService.getRegionsList().get(0);
+        Region region = regionListService.getRegionsList().get(0);
         regionForklift.setRegion(region);
         region.setId(1);
         region.setForkliftSerialNumber("Mirek");
-        ResponseEntity<Forklift> response = regionService.leaveRegionByForklift(forklift, region);
+        ResponseEntity<Forklift> response = regionListService.leaveRegionByForklift(forklift, region);
         ResponseEntity<Forklift> expectedResponse = new ResponseEntity<>(HttpStatus.OK);
         assertEquals(expectedResponse.toString(), response.toString());
 
@@ -87,7 +87,7 @@ class RegionListTest {
         region.setPolygon(new Polygon(xpoints, ypoints, 4));
         region.setId(1);
         region.setForkliftSerialNumber("Spark");
-        ResponseEntity<Forklift> response = regionService.leaveRegionByForklift(forklift, region);
+        ResponseEntity<Forklift> response = regionListService.leaveRegionByForklift(forklift, region);
         ResponseEntity<Forklift> expectedResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         assertEquals(expectedResponse.toString(), response.toString());
     }
@@ -103,7 +103,7 @@ class RegionListTest {
         region.setId(5);
         region.setForkliftSerialNumber("Mirek");
 
-        ResponseEntity<Forklift> response = regionService.leaveRegionByForklift(forklift, region);
+        ResponseEntity<Forklift> response = regionListService.leaveRegionByForklift(forklift, region);
         ResponseEntity<Forklift> expectedResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         assertEquals(expectedResponse.toString(), response.toString());
     }

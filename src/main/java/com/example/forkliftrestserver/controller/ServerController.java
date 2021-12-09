@@ -1,7 +1,7 @@
 package com.example.forkliftrestserver.controller;
 
 import com.example.forkliftrestserver.model.Region;
-import com.example.forkliftrestserver.service.RegionService;
+import com.example.forkliftrestserver.service.RegionListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +13,12 @@ import java.util.List;
 public class ServerController {
 
     @Autowired
-    RegionService regionService;
+    RegionListService regionListService;
 
     @RequestMapping("/region")
     public String regionPage(Model model){
 
-        List<Region> regionList = regionService.getRegionsList();
+        List<Region> regionList = regionListService.getRegionsList();
 
         model.addAttribute("regions", regionList);
         return "region";

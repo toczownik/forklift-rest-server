@@ -25,20 +25,4 @@ public class Forklift {
         this.serialNumber = serialNumber;
         this.coords = coords;
     }
-
-    public void addRegion(int regionId) {
-        if (!takenRegionsList.contains(regionId)) {
-            takenRegionsList.add(regionId);
-        }
-    }
-
-    public void removeRegion(int regionId) {
-        if (takenRegionsList.contains(regionId)) {
-            takenRegionsList.remove(regionId);
-        }
-    }
-
-    public void updateLastConnection() {
-        lastConnection = new Date();
-    }
 }

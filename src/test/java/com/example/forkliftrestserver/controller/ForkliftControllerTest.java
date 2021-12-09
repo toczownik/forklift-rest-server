@@ -4,7 +4,7 @@ import com.example.forkliftrestserver.model.Forklift;
 import com.example.forkliftrestserver.model.Region;
 import com.example.forkliftrestserver.model.RegionForklift;
 import com.example.forkliftrestserver.service.ForkliftService;
-import com.example.forkliftrestserver.service.RegionService;
+import com.example.forkliftrestserver.service.RegionListService;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ForkliftControllerTest {
 
-    private RegionService regionService = new RegionService();
-    private ForkliftController forkliftController = new ForkliftController(new ForkliftService(), regionService);
+    private RegionListService regionListService = new RegionListService();
+    private ForkliftController forkliftController = new ForkliftController(new ForkliftService(), regionListService);
 
     @Test
     public void registrationOutsideRegion() {
@@ -47,10 +47,10 @@ class ForkliftControllerTest {
         RegionForklift regionForklift = new RegionForklift();
         Forklift forklift1 = new Forklift("Mirek", new Point(53, 53));
         regionForklift.setForklift(forklift1);
-        Region region = regionService.getRegionsList().get(0);
+        Region region = regionListService.getRegionsList().get(0);
         regionForklift.setRegion(region);
         assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
-        region = regionService.getRegionsList().get(1);
+        region = regionListService.getRegionsList().get(1);
         regionForklift.setRegion(region);
         assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.addForklift(regionForklift));
 
@@ -64,7 +64,7 @@ class ForkliftControllerTest {
         regionForklift.setRegion(region);
         assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
 
-        region = regionService.getRegionsList().get(0);
+        region = regionListService.getRegionsList().get(0);
         region.setId(2);
         regionForklift.setRegion(region);
         assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
@@ -75,7 +75,7 @@ class ForkliftControllerTest {
         RegionForklift regionForklift = new RegionForklift();
         Forklift forklift = new Forklift("Mirek", new Point(105, 105));
         regionForklift.setForklift(forklift);
-        Region region = regionService.getRegionsList().get(0);
+        Region region = regionListService.getRegionsList().get(0);
         regionForklift.setRegion(region);
 
         assertEquals(new ResponseEntity<>(HttpStatus.OK), forkliftController.getPermissionToRegion(regionForklift));
@@ -86,7 +86,7 @@ class ForkliftControllerTest {
         RegionForklift regionForklift = new RegionForklift();
         Forklift forklift = new Forklift("Mirek", new Point(105, 105));
         regionForklift.setForklift(forklift);
-        Region region = regionService.getRegionsList().get(0);
+        Region region = regionListService.getRegionsList().get(0);
         region.setForkliftSerialNumber("Spark");
         regionForklift.setRegion(region);
         ResponseEntity<String> response = forkliftController.getPermissionToRegion(regionForklift);
@@ -99,7 +99,7 @@ class ForkliftControllerTest {
         RegionForklift regionForklift = new RegionForklift();
         Forklift forklift = new Forklift("Mirek", new Point(500, 500));
         regionForklift.setForklift(forklift);
-        Region region = regionService.getRegionsList().get(0);
+        Region region = regionListService.getRegionsList().get(0);
         regionForklift.setRegion(region);
         ResponseEntity<String> response = forkliftController.getPermissionToRegion(regionForklift);
         assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), response);
