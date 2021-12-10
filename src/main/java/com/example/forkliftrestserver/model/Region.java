@@ -14,27 +14,35 @@ import javax.persistence.Entity;
 
 public class Region {
     private int id;
-    private Polygon polygon;
+    private Polygon polygonIn;
+    private Polygon polygonOut;
     private String forkliftSerialNumber;
 
-    public Region(int id, Polygon polygon) {
+    public Region(int id, Polygon polygonIn, Polygon polygonOut) {
         this.id = id;
         forkliftSerialNumber = "";
-        this.polygon = polygon;
+        this.polygonIn = polygonIn;
+        this.polygonOut = polygonOut;
     }
 
     public boolean isForkliftInside(Point point) {
-        return polygon.contains(point);
+        return polygonIn.contains(point);
     }
 
-    public boolean isTheSame(Region regionFromClient) {
-        if (this.id != regionFromClient.id) return false;
+    public boolean isTheSame(RegionRequest regionFromClient) {
+        if (this.id != regionFromClient.getId()) return false;
 
-        for (int i = 0; i < this.getPolygon().xpoints.length; i++) {
-            if (this.getPolygon().xpoints[i] != regionFromClient.getPolygon().xpoints[i]) {
+        for (int i = 0; i < this.getPolygonIn().xpoints.length; i++) {
+            if (this.getPolygonIn().xpoints[i] != regionFromClient.getPolygonIn().xpoints[i]) {
                 return false;
             }
-            if (this.getPolygon().ypoints[i] != regionFromClient.getPolygon().ypoints[i]) {
+            if (this.getPolygonIn().ypoints[i] != regionFromClient.getPolygonIn().ypoints[i]) {
+                return false;
+            }
+            if (this.getPolygonOut().xpoints[i] != regionFromClient.getPolygonOut().xpoints[i]) {
+                return false;
+            }
+            if (this.getPolygonOut().ypoints[i] != regionFromClient.getPolygonOut().ypoints[i]) {
                 return false;
             }
         }

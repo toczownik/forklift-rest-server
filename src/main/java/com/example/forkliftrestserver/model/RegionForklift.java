@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 
 public class RegionForklift {
-    private Region region;
-    private Forklift forklift;
+    private RegionRequest region;
+    private ForkliftRequest forklift;
 }

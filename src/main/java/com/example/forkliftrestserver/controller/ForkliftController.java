@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -37,13 +38,17 @@ public class ForkliftController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Forklift> updateForklift(@RequestBody String serialNumber) {
-        forkliftService.updateForklift(serialNumber);
+    public ResponseEntity<Forklift> updateForklift(@RequestBody ForkliftRequest forkliftRequest) {
+        if (forkliftRequest == null || forkliftRequest.getSerialNumber() == null ||
+                forkliftRequest.getCoords() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        forkliftService.updateForklift(forkliftRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/add")
-    synchronized public ResponseEntity<Forklift> addForklift(@RequestBody RegionForklift regionForklift) {
+    @PostMapping("/turnOnForklift")
+    synchronized public ResponseEntity<Forklift> turnOnForklift(@RequestBody RegionForklift regionForklift) {
         if (regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
                 regionForklift.getForklift().getCoords() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -65,9 +70,6 @@ public class ForkliftController {
         }
         forkliftService.addForklift(regionForklift.getForklift(), ForkliftState.ACTIVE);
         return new ResponseEntity<>(HttpStatus.CREATED);
-
-//        aby oddzielić w 100% cześc biznesową od logiki i rest to może przekazywac do addForkift status z permission
-// i tam już zrobić switcha który będzie dodawał wózek z odpowiednim stanem
     }
 
     @PostMapping("/getPermission")
@@ -79,51 +81,65 @@ public class ForkliftController {
 
         PermissionMessage permission = regionListService.getPermission(regionForklift.getForklift(), regionForklift.getRegion());
 
-        if (permission.getStatus() == RegionState.SUCCESS) {
-            forkliftService.updateForklift(regionForklift.getForklift().getSerialNumber());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else if (permission.getStatus() == RegionState.OCCUPIED) {
-            return new ResponseEntity<>(permission.getForkliftSerialNumber(), HttpStatus.FORBIDDEN);
-        } else if (permission.getStatus() == RegionState.LACK) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        switch (permission.getStatus()) {
+            case SUCCESS:
+                forkliftService.updateForklift(regionForklift.getForklift(), ForkliftState.ACTIVE);
+                return new ResponseEntity<>(HttpStatus.OK);
+            case OCCUPIED:
+                forkliftService.updateForklift(regionForklift.getForklift(), ForkliftState.WAITING);
+                return new ResponseEntity<>(permission.getForkliftSerialNumber(), HttpStatus.FORBIDDEN);
+            case LACK:
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            default:
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/leaveTheRegion")
     synchronized public ResponseEntity<Forklift> leaveTheRegion(@RequestBody RegionForklift regionForklift) {
+        if (regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
+                regionForklift.getForklift().getCoords() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return regionListService.leaveRegionByForklift(regionForklift.getForklift(), regionForklift.getRegion());
     }
 
-    @DeleteMapping("/{serialNumber}")
-    public ResponseEntity<Forklift> deleteForklift(@PathVariable("serialNumber") String serialNumber) {
-        if (forkliftService.forkliftExists(serialNumber)) {
-            regionListService.freeRegions(serialNumber);
-            forkliftService.removeForklift(serialNumber);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PostMapping("/turnOff")
+    public ResponseEntity<String> turnOffForklift(@RequestBody ForkliftRequest forkliftRequest) {
+        if (forkliftRequest == null || forkliftRequest.getSerialNumber() == null ||
+                forkliftRequest.getCoords() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        else {
+        if (forkliftService.forkliftExists(forkliftRequest.getSerialNumber())) {
+            regionListService.freeRegions(forkliftRequest.getSerialNumber());
+            boolean isInside = regionListService.isForkliftInside(forkliftRequest);
+            forkliftService.updateForklift(forkliftRequest, ForkliftState.INACTIVE);
+            if (isInside) {
+                return new ResponseEntity<>("Please move forklift out of region.", HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @Scheduled(initialDelay = 1000, fixedDelay = 1000)
-    public void checker() {
-        for (Forklift forklift: forkliftService.getForklifts().values()) {
-            long timeDiff = new Date().getTime() - forklift.getLastConnection().getTime();
-            if (timeDiff >= 5000) {
-                if (forklift.getState() == ForkliftState.INACTIVE && timeDiff > 10000) {
-                    if (forklift.getTakenRegionsList().isEmpty()) {
-                        forkliftService.removeForklift(forklift.getSerialNumber());
-                    } else if (timeDiff > 30000) {
-                        regionListService.freeRegions(forklift.getSerialNumber());
-                        forkliftService.removeForklift(forklift.getSerialNumber()); // czy usuwamy od razu cały wózek z listy czy ustawiamy jako nieaktywny ?
-                        // zgodnie z założeniami mamy ustawić go na nieaktywny i zwolnić region
-                    }
-                }
-                forklift.setState(ForkliftState.INACTIVE);
-            }
-        }
-    }
+//    @Scheduled(initialDelay = 1000, fixedDelay = 1000)
+//    public void checker() {
+//        for (Forklift forklift: forkliftService.getForklifts().values()) {
+//            long timeDiff = new Date().getTime() - forklift.getLastConnection().getTime();
+//            if (timeDiff >= 5000) {
+//                if (forklift.getState() == ForkliftState.INACTIVE && timeDiff > 10000) {
+//                    if (forklift.getTakenRegionsList().isEmpty()) {
+//                        forkliftService.removeForklift(forklift.getSerialNumber());
+//                    } else if (timeDiff > 30000) {
+//                        regionListService.freeRegions(forklift.getSerialNumber());
+//                        forkliftService.removeForklift(forklift.getSerialNumber()); // czy usuwamy od razu cały wózek z listy czy ustawiamy jako nieaktywny ?
+//                        // zgodnie z założeniami mamy ustawić go na nieaktywny i zwolnić region
+//                    }
+//                }
+//                forklift.setState(ForkliftState.INACTIVE);
+//            }
+//        }
+//    }
 }

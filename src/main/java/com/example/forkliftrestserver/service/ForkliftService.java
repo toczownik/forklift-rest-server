@@ -1,6 +1,7 @@
 package com.example.forkliftrestserver.service;
 
 import com.example.forkliftrestserver.model.Forklift;
+import com.example.forkliftrestserver.model.ForkliftRequest;
 import com.example.forkliftrestserver.model.ForkliftState;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +15,22 @@ public class ForkliftService {
         return forkliftMap;
     }
 
-    public void updateForklift(String serialNumber) {
-        Forklift forklift = forkliftMap.get(serialNumber);
+    public void updateForklift(ForkliftRequest forkliftRequest, ForkliftState state) {
+        Forklift forklift = forkliftMap.get(forkliftRequest.getSerialNumber());
         if(forklift != null){
             forklift.setLastConnection(new Date());
-            forkliftMap.replace(serialNumber, forklift);
+            forklift.setCoords(forkliftRequest.getCoords());
+            forklift.setState(state);
+            forkliftMap.replace(forklift.getSerialNumber(), forklift);
+        }
+    }
+
+    public void updateForklift(ForkliftRequest forkliftRequest) {
+        Forklift forklift = forkliftMap.get(forkliftRequest.getSerialNumber());
+        if(forklift != null){
+            forklift.setLastConnection(new Date());
+            forklift.setCoords(forkliftRequest.getCoords());
+            forkliftMap.replace(forklift.getSerialNumber(), forklift);
         }
     }
 
@@ -35,9 +47,12 @@ public class ForkliftService {
         return forkliftMap.containsKey(serialNumber);
     }
 
-    public void addForklift(Forklift forklift, ForkliftState state) {
-        forklift.setLastConnection(new Date());
-        forklift.setState(state);
-        forkliftMap.putIfAbsent(forklift.getSerialNumber(), forklift);
+    public void addForklift(ForkliftRequest forkliftRequest, ForkliftState state) {
+        Forklift newForklift = new Forklift(forkliftRequest.getSerialNumber(), forkliftRequest.getCoords());
+        if(newForklift != null) {
+            newForklift.setLastConnection(new Date());
+            newForklift.setState(state);
+            forkliftMap.putIfAbsent(newForklift.getSerialNumber(), newForklift);
+        }
     }
 }

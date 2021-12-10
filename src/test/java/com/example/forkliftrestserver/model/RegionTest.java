@@ -16,7 +16,8 @@ class RegionTest {
         int[] xpoints = {200, 200, 210, 210};
         int[] ypoints = {200, 210, 210, 200};
         region.setId(0);
-        region.setPolygon(new Polygon(xpoints, ypoints, 4));
+        region.setPolygonIn(new Polygon(xpoints, ypoints, 4));
+        region.setPolygonOut(new Polygon(xpoints, ypoints, 4));
     }
     @Test
     void isForkliftInsideTrue() {
@@ -34,11 +35,12 @@ class RegionTest {
 
     @Test
     void isTheSameTrue() {
-        Region secondRegion = new Region();
+        RegionRequest secondRegion = new RegionRequest();
         int[] xpoints = {200, 200, 210, 210};
         int[] ypoints = {200, 210, 210, 200};
         secondRegion.setId(0);
-        secondRegion.setPolygon(new Polygon(xpoints, ypoints, 4));
+        secondRegion.setPolygonIn(new Polygon(xpoints, ypoints, 4));
+        secondRegion.setPolygonOut(new Polygon(xpoints, ypoints, 4));
 
         boolean response = region.isTheSame(secondRegion);
 
@@ -47,11 +49,12 @@ class RegionTest {
 
     @Test
     void isTheSameDifferentPolygonReturnFalse() {
-        Region secondRegion = new Region();
+        RegionRequest secondRegion = new RegionRequest();
         int[] xpoints = {50, 50, 55, 55};
         int[] ypoints = {50, 55, 55, 50};
         secondRegion.setId(0);
-        secondRegion.setPolygon(new Polygon(xpoints, ypoints, 4));
+        secondRegion.setPolygonIn(new Polygon(xpoints, ypoints, 4));
+        secondRegion.setPolygonOut(new Polygon(xpoints, ypoints, 4));
 
         boolean response = region.isTheSame(secondRegion);
 
@@ -60,11 +63,12 @@ class RegionTest {
 
     @Test
     void isTheSameDifferentIdReturnFalse() {
-        Region secondRegion = new Region();
+        RegionRequest secondRegion = new RegionRequest();
         int[] xpoints = {200, 200, 210, 210};
         int[] ypoints = {200, 210, 210, 200};
         secondRegion.setId(12);
-        secondRegion.setPolygon(new Polygon(xpoints, ypoints, 4));
+        secondRegion.setPolygonIn(new Polygon(xpoints, ypoints, 4));
+        secondRegion.setPolygonOut(new Polygon(xpoints, ypoints, 4));
 
         boolean response = region.isTheSame(secondRegion);
 
