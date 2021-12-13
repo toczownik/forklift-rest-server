@@ -58,6 +58,7 @@ public class ForkliftController {
                     forkliftService.addForklift(regionForklift.getForklift(), ForkliftState.WAITING);
                     return new ResponseEntity<>(HttpStatus.FORBIDDEN);
                 case LACK:
+                    forkliftService.addForklift(regionForklift.getForklift(), ForkliftState.INACTIVE);
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 default:
                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
