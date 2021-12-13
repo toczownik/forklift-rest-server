@@ -48,6 +48,15 @@ public class RegionList {
         regions.add(region);
     }
 
+    public boolean anyTakenByForklift(Forklift forklift) {
+        for (Region region : regions) {
+            if (region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 //    do przeanalizowania i przetestowania !
     public ResponseEntity<Forklift> leaveRegionByForklift(Forklift forklift, Region regionToLeave) {
         for (Region region : regions) {

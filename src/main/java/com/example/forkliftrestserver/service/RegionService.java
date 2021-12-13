@@ -49,4 +49,8 @@ public class RegionService {
     public ResponseEntity<Forklift> leaveRegionByForklift(Forklift forklift, Region regionToLeave) {
         return regionList.leaveRegionByForklift(forklift, regionToLeave);
     }
+
+    public boolean isForkliftOutside(Forklift forklift) {
+        return regionList.anyTakenByForklift(forklift);
+    }
 }

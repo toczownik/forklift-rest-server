@@ -2,6 +2,7 @@ package com.example.forkliftrestserver;
 
 import com.example.forkliftrestserver.controller.ForkliftController;
 import com.example.forkliftrestserver.model.Forklift;
+import com.example.forkliftrestserver.model.ForkliftState;
 import com.example.forkliftrestserver.model.Region;
 import com.example.forkliftrestserver.model.RegionForklift;
 import com.example.forkliftrestserver.service.ForkliftService;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.awt.*;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -71,6 +74,28 @@ class ForkliftControllerTests {
         region.setId(2);
         regionForklift.setRegion(region);
         assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
+    }
+
+    @Test
+    public void inactiveForkliftTests() {
+        Forklift forklift = new Forklift("Mirek", new Point(20, 20));
+        RegionForklift regionForklift = new RegionForklift();
+        regionForklift.setForklift(forklift);
+        regionForklift.setRegion(null);
+        forkliftController.addForklift(regionForklift);
+        forkliftController.checker();
+        assertEquals(ForkliftState.ACTIVE, forkliftController.getForklift(forklift.getSerialNumber()).getState());
+        forklift.setLastConnection(new Date(forklift.getLastConnection().getTime() - 30001));
+        forkliftController.checker();
+        assertEquals(ForkliftState.ACTIVE, forkliftController.getForklift(forklift.getSerialNumber()).getState());
+        forklift.setLastConnection(new Date(new Date().getTime() - 90001));
+        forkliftController.checker();
+        assertEquals(ForkliftState.INACTIVE, forkliftController.getForklift(forklift.getSerialNumber()).getState());
+        forklift.setCoords(new Point(0, 0));
+        forkliftController.updateForklift(forklift);
+        forklift.setLastConnection(new Date(new Date().getTime() - 30001));
+        forkliftController.checker();
+        assertEquals(ForkliftState.INACTIVE, forkliftController.getForklift(forklift.getSerialNumber()).getState());
     }
 
 }
