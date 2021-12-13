@@ -124,22 +124,22 @@ public class ForkliftController {
         }
     }
 
-//    @Scheduled(initialDelay = 1000, fixedDelay = 1000)
-//    public void checker() {
-//        for (Forklift forklift: forkliftService.getForklifts().values()) {
-//            long timeDiff = new Date().getTime() - forklift.getLastConnection().getTime();
-//            if (timeDiff >= 5000) {
-//                if (forklift.getState() == ForkliftState.INACTIVE && timeDiff > 10000) {
-//                    if (forklift.getTakenRegionsList().isEmpty()) {
-//                        forkliftService.removeForklift(forklift.getSerialNumber());
-//                    } else if (timeDiff > 30000) {
-//                        regionListService.freeRegions(forklift.getSerialNumber());
-//                        forkliftService.removeForklift(forklift.getSerialNumber()); // czy usuwamy od razu cały wózek z listy czy ustawiamy jako nieaktywny ?
-//                        // zgodnie z założeniami mamy ustawić go na nieaktywny i zwolnić region
-//                    }
-//                }
-//                forklift.setState(ForkliftState.INACTIVE);
-//            }
-//        }
-//    }
+    @Scheduled(initialDelay = 1000, fixedDelay = 1000)
+    public void checker() {
+        for (Forklift forklift: forkliftService.getForklifts().values()) {
+            long timeDiff = new Date().getTime() - forklift.getLastConnection().getTime();
+            if (timeDiff >= 5000) {
+                if (forklift.getState() == ForkliftState.INACTIVE && timeDiff > 10000) {
+                    if (forklift.getTakenRegionsList().isEmpty()) {
+                        forkliftService.removeForklift(forklift.getSerialNumber());
+                    } else if (timeDiff > 30000) {
+                        regionListService.freeRegions(forklift.getSerialNumber());
+                        forkliftService.removeForklift(forklift.getSerialNumber()); // czy usuwamy od razu cały wózek z listy czy ustawiamy jako nieaktywny ?
+                        // zgodnie z założeniami mamy ustawić go na nieaktywny i zwolnić region
+                    }
+                }
+                forklift.setState(ForkliftState.INACTIVE);
+            }
+        }
+    }
 }
