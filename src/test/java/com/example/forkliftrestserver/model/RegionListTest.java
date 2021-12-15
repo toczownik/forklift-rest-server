@@ -1,17 +1,42 @@
 package com.example.forkliftrestserver.model;
 
 import com.example.forkliftrestserver.service.RegionListService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegionListTest {
 
     private RegionListService regionListService = new RegionListService();
+    private RegionRequest region =  new RegionRequest();
+    private Region regionToList = new Region();
+    private RegionList regionList = new RegionList();
+
+    @BeforeEach
+    void init(){
+        int[] xpoints = {100, 100, 110, 110};
+        int[] ypoints = {100, 110, 110, 100};
+        region.setId(0);
+        region.setPolygonIn(new Polygon(xpoints, ypoints, 4));
+        region.setPolygonOut(new Polygon(xpoints, ypoints, 4));
+
+        regionToList.setId(0);
+        regionToList.setPolygonIn(new Polygon(xpoints, ypoints, 4));
+        regionToList.setPolygonOut(new Polygon(xpoints, ypoints, 4));
+        regionToList.setForkliftSerialNumber("");
+        regionList.setRegions(new ArrayList<>());
+        regionList.getRegions().add(regionToList);
+
+        regionListService.getRegionsList().clear();
+        regionListService.getRegionsList().add(regionToList);
+
+    }
 
     @Test
     void isForkliftMovementAllowed() {
