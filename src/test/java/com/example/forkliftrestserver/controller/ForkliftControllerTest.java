@@ -150,7 +150,59 @@ class ForkliftControllerTest {
     }
 
     @Test
-    void leaveTheRegion() {
+    void leaveTheRegionNullBADREQUEST() {
+        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.leaveTheRegion(null));
+    }
 
+    @Test
+    void leaveTheRegionForkliftNullBADREQUEST() {
+        RegionForklift regionForklift = new RegionForklift();
+
+        regionForklift.setForklift(null);
+        regionForklift.setRegion(region);
+        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.leaveTheRegion(regionForklift));
+    }
+
+    @Test
+    void leaveTheRegionRegiontNullBADREQUEST() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Spark", new Point(200, 200));
+
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(null);
+        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.leaveTheRegion(regionForklift));
+    }
+
+    @Test
+    void leaveTheRegionOK() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(200, 200));
+
+        regionList.getRegions().get(0).setForkliftSerialNumber("Mirek");
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(region);
+        assertEquals(new ResponseEntity<>(HttpStatus.OK), forkliftController.leaveTheRegion(regionForklift));
+    }
+
+    @Test
+    void leaveTheRegionForkliftNotFoundNOTFOUND() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(200, 200));
+
+        regionList.getRegions().get(0).setForkliftSerialNumber("Spark");
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(region);
+        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.leaveTheRegion(regionForklift));
+    }
+
+    @Test
+    void leaveTheRegionForkliftInsideNOTFOUND() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(105, 105));
+
+        regionList.getRegions().get(0).setForkliftSerialNumber("Mirek");
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(region);
+        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.leaveTheRegion(regionForklift));
     }
 }

@@ -49,8 +49,8 @@ public class ForkliftController {
 
     @PostMapping("/turnOnForklift")
     synchronized public ResponseEntity<Forklift> turnOnForklift(@RequestBody RegionForklift regionForklift) {
-        if (regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
-                regionForklift.getForklift().getCoords() == null) {
+        if (regionForklift == null || regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
+                regionForklift.getForklift().getCoords() == null || regionForklift.getRegion() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (regionForklift.getRegion() != null) {
@@ -75,8 +75,8 @@ public class ForkliftController {
 
     @PostMapping("/getPermission")
     synchronized public ResponseEntity<String> getPermissionToRegion(@RequestBody RegionForklift regionForklift) {
-        if (regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
-                regionForklift.getForklift().getCoords() == null) {
+        if (regionForklift == null || regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
+                regionForklift.getForklift().getCoords() == null || regionForklift.getRegion() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -98,8 +98,8 @@ public class ForkliftController {
 
     @PostMapping("/leaveTheRegion")
     synchronized public ResponseEntity<Forklift> leaveTheRegion(@RequestBody RegionForklift regionForklift) {
-        if (regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
-                regionForklift.getForklift().getCoords() == null) {
+        if (regionForklift == null || regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
+                regionForklift.getForklift().getCoords() == null || regionForklift.getRegion() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return regionListService.leaveRegionByForklift(regionForklift.getForklift(), regionForklift.getRegion());
