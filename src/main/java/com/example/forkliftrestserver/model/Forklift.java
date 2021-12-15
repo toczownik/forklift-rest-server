@@ -4,9 +4,7 @@ import lombok.*;
 import java.awt.*;
 
 import javax.persistence.Entity;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +17,6 @@ public class Forklift {
     private Point coords = new Point();
     private ForkliftState state = ForkliftState.ACTIVE;
     private Date lastConnection;
-    private List<Integer> takenRegionsList = new ArrayList<>();
 
     public Forklift(String serialNumber, Point coords) {
         this.serialNumber = serialNumber;

@@ -60,6 +60,15 @@ public class RegionListService {
         }
     }
 
+    public boolean isForkliftOutside(Forklift forklift) {
+        for (Region region : regionList.getRegions()) {
+            if (region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void addRegion(Region region) {
         regionList.getRegions().add(region);
     }

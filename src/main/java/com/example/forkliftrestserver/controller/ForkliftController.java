@@ -63,6 +63,7 @@ public class ForkliftController {
                     forkliftService.addForklift(regionForklift.getForklift(), ForkliftState.WAITING);
                     return new ResponseEntity<>(HttpStatus.FORBIDDEN);
                 case LACK:
+                    forkliftService.addForklift(regionForklift.getForklift(), ForkliftState.INACTIVE);
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 default:
                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -124,21 +125,18 @@ public class ForkliftController {
         }
     }
 
-    @Scheduled(initialDelay = 1000, fixedDelay = 1000)
+    @Scheduled(initialDelay = 5000, fixedDelay = 5000)
     public void checker() {
         for (Forklift forklift: forkliftService.getForklifts().values()) {
             long timeDiff = new Date().getTime() - forklift.getLastConnection().getTime();
-            if (timeDiff >= 5000) {
-                if (forklift.getState() == ForkliftState.INACTIVE && timeDiff > 10000) {
-                    if (forklift.getTakenRegionsList().isEmpty()) {
-                        forkliftService.removeForklift(forklift.getSerialNumber());
-                    } else if (timeDiff > 30000) {
-                        regionListService.freeRegions(forklift.getSerialNumber());
-                        forkliftService.removeForklift(forklift.getSerialNumber()); // czy usuwamy od razu cały wózek z listy czy ustawiamy jako nieaktywny ?
-                        // zgodnie z założeniami mamy ustawić go na nieaktywny i zwolnić region
-                    }
+
+            if (timeDiff > 30000) {
+                if (regionListService.isForkliftOutside(forklift)) {
+                    forklift.setState(ForkliftState.INACTIVE);
+                } else if (timeDiff > 90000) {
+                    regionListService.freeRegions(forklift.getSerialNumber());
+                    forklift.setState(ForkliftState.INACTIVE);
                 }
-                forklift.setState(ForkliftState.INACTIVE);
             }
         }
     }
