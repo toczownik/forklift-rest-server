@@ -33,8 +33,12 @@ public class ForkliftController {
     }
 
     @GetMapping("/{serialNumber}")
-    public Forklift getForklift(@PathVariable("serialNumber") String serialNumber) {
-        return forkliftService.getForkliftBySerialNumber(serialNumber);
+    public ResponseEntity<Forklift> getForklift(@PathVariable("serialNumber") String serialNumber) {
+        Forklift forklift = forkliftService.getForkliftBySerialNumber(serialNumber);
+        if(forklift != null){
+            return new ResponseEntity<>(forklift, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/update")
