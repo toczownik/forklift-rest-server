@@ -60,10 +60,9 @@ public class RegionListService {
         }
     }
 
-//    co w przypadku, gdy jest w środku regionu, ale region nie został mu przydzielony
     public boolean isForkliftOutside(Forklift forklift) {
         for (Region region : regionList.getRegions()) {
-            if (region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
+            if (region.getForkliftSerialNumber().equals(forklift.getSerialNumber()) || region.isForkliftInside(forklift.getCoords())) {
                 return false;
             }
         }

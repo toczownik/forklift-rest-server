@@ -115,10 +115,17 @@ class RegionListServiceTest {
     }
 
     @Test
-    void isForkliftOutsideReturnFalse(){
-        Forklift forklift = new Forklift("Mirek", new Point(105, 105));
+    void isForkliftOutsideSerialNumberReturnFalse(){
+        Forklift forklift = new Forklift("Mirek", new Point(205, 205));
 
         regionList.getRegions().get(0).setForkliftSerialNumber("Mirek");
+
+        assertEquals(false, regionListService.isForkliftOutside(forklift));
+    }
+
+    @Test
+    void isForkliftOutsideForkliftReturnFalse(){
+        Forklift forklift = new Forklift("Mirek", new Point(105, 105));
 
         assertEquals(false, regionListService.isForkliftOutside(forklift));
     }

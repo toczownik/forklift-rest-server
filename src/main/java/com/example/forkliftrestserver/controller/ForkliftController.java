@@ -34,6 +34,9 @@ public class ForkliftController {
 
     @GetMapping("/{serialNumber}")
     public ResponseEntity<Forklift> getForklift(@PathVariable("serialNumber") String serialNumber) {
+        if(serialNumber == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Forklift forklift = forkliftService.getForkliftBySerialNumber(serialNumber);
         if(forklift != null){
             return new ResponseEntity<>(forklift, HttpStatus.OK);
@@ -52,7 +55,7 @@ public class ForkliftController {
     }
 
     @PostMapping("/turnOnForklift")
-    synchronized public ResponseEntity<Forklift> turnOnForklift(@RequestBody RegionForklift regionForklift) {
+    public synchronized ResponseEntity<Forklift> turnOnForklift(@RequestBody RegionForklift regionForklift) {
         if (regionForklift == null || regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
                 regionForklift.getForklift().getCoords() == null || regionForklift.getRegion() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -78,7 +81,7 @@ public class ForkliftController {
     }
 
     @PostMapping("/getPermission")
-    synchronized public ResponseEntity<String> getPermissionToRegion(@RequestBody RegionForklift regionForklift) {
+    public synchronized ResponseEntity<String> getPermissionToRegion(@RequestBody RegionForklift regionForklift) {
         if (regionForklift == null || regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
                 regionForklift.getForklift().getCoords() == null || regionForklift.getRegion() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -101,7 +104,7 @@ public class ForkliftController {
     }
 
     @PostMapping("/leaveTheRegion")
-    synchronized public ResponseEntity<Forklift> leaveTheRegion(@RequestBody RegionForklift regionForklift) {
+    public synchronized ResponseEntity<Forklift> leaveTheRegion(@RequestBody RegionForklift regionForklift) {
         if (regionForklift == null || regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
                 regionForklift.getForklift().getCoords() == null || regionForklift.getRegion() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
