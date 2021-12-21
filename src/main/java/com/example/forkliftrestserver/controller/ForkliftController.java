@@ -57,7 +57,7 @@ public class ForkliftController {
     @PostMapping("/turnOnForklift")
     public synchronized ResponseEntity<Forklift> turnOnForklift(@RequestBody RegionForklift regionForklift) {
         if (regionForklift == null || regionForklift.getForklift() == null || regionForklift.getForklift().getSerialNumber() == null ||
-                regionForklift.getForklift().getCoords() == null || regionForklift.getRegion() == null) {
+                regionForklift.getForklift().getCoords() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (regionForklift.getRegion() != null) {

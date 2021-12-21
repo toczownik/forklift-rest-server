@@ -43,77 +43,102 @@ class ForkliftControllerTest {
     }
 
     @Test
-    public void registrationOutsideRegion() {
+    public void turnOnForkliftOutsideCREATED() {
         RegionForklift regionForklift = new RegionForklift();
         ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(10, 10));
         regionForklift.setForklift(forklift);
-//        regionForklift.setRegion(null);
-//        assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.turnOffForklift(regionForklift));
-//        forklift.setCoords(new Point(20, 20));
-//        regionForklift.setForklift(forklift);
-//        assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.turnOffForklift(regionForklift));
-//
-//        assertEquals(forkliftController.getForklift("Mirek"), forklift);
-//        forklift.setSerialNumber(null);
-//        regionForklift.setForklift(forklift);
-//        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.turnOffForklift(regionForklift));
-//
-//        forklift.setCoords(null);
-//        regionForklift.setForklift(forklift);
-//        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.turnOffForklift(regionForklift));
-//
-//        regionForklift.setForklift(null);
-//        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.turnOffForklift(regionForklift));
-    }
-
-    @Test
-    public void registrationInsideRegion() {
-        RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift1 = new ForkliftRequest("Mirek", new Point(53, 53));
-        regionForklift.setForklift(forklift1);
-        Region region = regionListService.getRegionsList().get(0);
-//        regionForklift.setRegion(region);
-//        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
-//        region = regionListService.getRegionsList().get(1);
-//        regionForklift.setRegion(region);
-//        assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.addForklift(regionForklift));
-//
-//        Forklift forklift2 = new Forklift("Tymek", new Point(52, 52));
-//        regionForklift.setForklift(forklift2);
-//        assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), forkliftController.addForklift(regionForklift));
-//
-//        int[] xpoints = {200, 200, 210, 210};
-//        int[] ypoints = {200, 210, 210, 200};
-//        region.setPolygon(new Polygon(xpoints, ypoints, 4));
-//        regionForklift.setRegion(region);
-//        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
-//
-//        region = regionService.getRegionsList().get(0);
-//        region.setId(2);
-//        regionForklift.setRegion(region);
-//        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.addForklift(regionForklift));
-    }
-
-    @Test
-    public void inactiveForkliftTests() {
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(20, 20));
-        RegionForklift regionForklift = new RegionForklift();
-        regionForklift.setForklift(forklift);
         regionForklift.setRegion(null);
+        assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.turnOnForklift(regionForklift));
+    }
+
+    @Test
+    public void turnOnForkliftRegionForkliftNullBADREQUEST() {
+        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.turnOnForklift(null));
+    }
+
+    @Test
+    public void turnOnForkliftForkliftNullBADREQUEST() {
+        RegionForklift regionForklift = new RegionForklift();
+        regionForklift.setForklift(null);
+        regionForklift.setRegion(new RegionRequest());
+        assertEquals(new ResponseEntity<>(HttpStatus.BAD_REQUEST), forkliftController.turnOnForklift(regionForklift));
+    }
+
+    @Test
+    public void turnOnForkliftInsideCREATED() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(regionRequest);
+        assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.turnOnForklift(regionForklift));
+    }
+
+    @Test
+    public void turnOnForkliftInsideFORBIDDEN() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(regionRequest);
+        forkliftController.turnOnForklift(regionForklift);
+        forkliftRequest = new ForkliftRequest("Spark", new Point(104, 103));
+        regionForklift.setForklift(forkliftRequest);
+        assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), forkliftController.turnOnForklift(regionForklift));
+    }
+
+    @Test
+    public void turnOnForkliftInsideNOTFOUND() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        RegionRequest regionRequest = new RegionRequest(1, region.getPolygonIn(), region.getPolygonOut());
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(regionRequest);
+        assertEquals(new ResponseEntity<>(HttpStatus.NOT_FOUND), forkliftController.turnOnForklift(regionForklift));
+    }
+
+    @Test
+    public void checkActiveForklift() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(regionRequest);
         forkliftController.turnOnForklift(regionForklift);
         forkliftController.checker();
-//        assertEquals(ForkliftState.ACTIVE, forkliftController.getForklift(forklift.getSerialNumber()).getState());
-//        forklift.setLastConnection(new Date(forklift.getLastConnection().getTime() - 30001));
-//        forkliftController.checker();
-//        assertEquals(ForkliftState.ACTIVE, forkliftController.getForklift(forklift.getSerialNumber()).getState());
-//        forklift.setLastConnection(new Date(new Date().getTime() - 90001));
-//        forkliftController.checker();
-//        assertEquals(ForkliftState.INACTIVE, forkliftController.getForklift(forklift.getSerialNumber()).getState());
-//        forklift.setCoords(new Point(0, 0));
-//        forkliftController.updateForklift(forklift);
-//        forklift.setLastConnection(new Date(new Date().getTime() - 30001));
-//        forkliftController.checker();
-//        assertEquals(ForkliftState.INACTIVE, forkliftController.getForklift(forklift.getSerialNumber()).getState());
+        assertEquals(ForkliftState.ACTIVE, forkliftController.getForklifts().get("Mirek").getState());
+    }
+
+    @Test
+    public void checkInactiveForkliftOutside() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(10, 10));
+        RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(regionRequest);
+        forkliftController.turnOnForklift(regionForklift);
+        forkliftController.getForklifts().get("Mirek").setLastConnection(new Date(new Date().getTime() - 30001));
+        forkliftController.checker();
+        assertEquals(ForkliftState.INACTIVE, forkliftController.getForklifts().get("Mirek").getState());
+    }
+
+    @Test
+    public void checkInactiveForkliftInside() {
+        RegionForklift regionForklift = new RegionForklift();
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
+        regionForklift.setForklift(forkliftRequest);
+        regionForklift.setRegion(regionRequest);
+        forkliftController.turnOnForklift(regionForklift);
+        forkliftController.getForklifts().get("Mirek").setLastConnection(new Date(new Date().getTime() - 30001));
+        forkliftController.checker();
+        assertEquals(ForkliftState.ACTIVE, forkliftController.getForklifts().get("Mirek").getState());
+        forkliftController.getForklifts().get("Mirek").setLastConnection(new Date(new Date().getTime() - 90001));
+        forkliftController.checker();
+        for (Region region: regionListService.getRegionsList()) {
+            assertNotEquals(forkliftController.getForklifts().get("Mirek").getSerialNumber(), region.getForkliftSerialNumber());
+        }
+        assertEquals(ForkliftState.INACTIVE, forkliftController.getForklifts().get("Mirek").getState());
     }
 
     @Test
@@ -164,7 +189,7 @@ class ForkliftControllerTest {
     }
 
     @Test
-    void leaveTheRegionRegiontNullBADREQUEST() {
+    void leaveTheRegionRegionNullBADREQUEST() {
         RegionForklift regionForklift = new RegionForklift();
         ForkliftRequest forkliftRequest = new ForkliftRequest("Spark", new Point(200, 200));
 
