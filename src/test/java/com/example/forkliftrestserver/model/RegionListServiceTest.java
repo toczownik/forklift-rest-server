@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -169,4 +170,16 @@ class RegionListServiceTest {
 
         assertEquals("", regionList.getRegions().get(0).getForkliftSerialNumber());
     }
+
+    /*@Test
+    void getRegionsListDeepCopyTest(){
+        List<Region> deepCopyRegionList = regionListService.getRegionsList();
+
+        assertEquals(deepCopyRegionList.toString(), regionList.getRegions().toString());
+
+        deepCopyRegionList.get(0).setForkliftSerialNumber("Test");
+
+        assertNotEquals(deepCopyRegionList.toString(), regionList.getRegions().toString());
+
+    }*/
 }

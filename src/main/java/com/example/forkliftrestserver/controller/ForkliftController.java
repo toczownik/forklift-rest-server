@@ -33,7 +33,7 @@ public class ForkliftController {
     }
 
     @GetMapping("/{serialNumber}")
-    public ResponseEntity<Forklift> getForklift(@PathVariable("serialNumber") String serialNumber) {
+    public synchronized ResponseEntity<Forklift> getForklift(@PathVariable("serialNumber") String serialNumber) {
         if(serialNumber == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -45,7 +45,7 @@ public class ForkliftController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Forklift> updateForklift(@RequestBody ForkliftRequest forkliftRequest) {
+    public synchronized ResponseEntity<Forklift> updateForklift(@RequestBody ForkliftRequest forkliftRequest) {
         if (forkliftRequest == null || forkliftRequest.getSerialNumber() == null ||
                 forkliftRequest.getCoords() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -113,7 +113,7 @@ public class ForkliftController {
     }
 
     @PostMapping("/turnOff")
-    public ResponseEntity<String> turnOffForklift(@RequestBody ForkliftRequest forkliftRequest) {
+    public synchronized ResponseEntity<String> turnOffForklift(@RequestBody ForkliftRequest forkliftRequest) {
         if (forkliftRequest == null || forkliftRequest.getSerialNumber() == null ||
                 forkliftRequest.getCoords() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

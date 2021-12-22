@@ -31,15 +31,17 @@ public class RegionListService {
         }
     }
 
-    synchronized public PermissionMessage getPermission(ForkliftRequest forklift, RegionRequest regionFromClient) {
-        for (Region region : regionList.getRegions()) {
-            if (region.isForkliftInside(forklift.getCoords())) {
-                if (region.isTheSame(regionFromClient)) {
-                    if (region.getForkliftSerialNumber().equals("") || region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
-                        region.setForkliftSerialNumber(forklift.getSerialNumber());
-                        return new PermissionMessage(RegionState.SUCCESS, region.getForkliftSerialNumber());
-                    } else {
-                        return new PermissionMessage(RegionState.OCCUPIED, region.getForkliftSerialNumber());
+    public PermissionMessage getPermission(ForkliftRequest forklift, RegionRequest regionFromClient) {
+        synchronized (regionList) {
+            for (Region region : regionList.getRegions()) {
+                if (region.isForkliftInside(forklift.getCoords())) {
+                    if (region.isTheSame(regionFromClient)) {
+                        if (region.getForkliftSerialNumber().equals("") || region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
+                            region.setForkliftSerialNumber(forklift.getSerialNumber());
+                            return new PermissionMessage(RegionState.SUCCESS, region.getForkliftSerialNumber());
+                        } else {
+                            return new PermissionMessage(RegionState.OCCUPIED, region.getForkliftSerialNumber());
+                        }
                     }
                 }
             }
@@ -47,40 +49,49 @@ public class RegionListService {
         return new PermissionMessage(RegionState.LACK, "");
     }
 
-//    deep copy
     public List<Region> getRegionsList() {
-        return regionList.getRegions();
+        synchronized (regionList) {
+            return regionList.getRegions();
+        }
     }
 
     public void freeRegions(String serialNumber) {
-        for (Region region : regionList.getRegions()) {
-            if (region.getForkliftSerialNumber().equals(serialNumber)) {
-                region.setForkliftSerialNumber("");
+        synchronized (regionList) {
+            for (Region region : regionList.getRegions()) {
+                if (region.getForkliftSerialNumber().equals(serialNumber)) {
+                    region.setForkliftSerialNumber("");
+                }
             }
         }
     }
 
     public boolean isForkliftOutside(Forklift forklift) {
-        for (Region region : regionList.getRegions()) {
-            if (region.getForkliftSerialNumber().equals(forklift.getSerialNumber()) || region.isForkliftInside(forklift.getCoords())) {
-                return false;
+        synchronized (regionList) {
+            for (Region region : regionList.getRegions()) {
+                if (region.getForkliftSerialNumber().equals(forklift.getSerialNumber()) || region.isForkliftInside(forklift.getCoords())) {
+                    return false;
+                }
             }
         }
         return true;
     }
 
     public void addRegion(Region region) {
-        regionList.getRegions().add(region);
+        synchronized (regionList) {
+            regionList.getRegions().add(region);
+        }
     }
 
     public ResponseEntity<Forklift> leaveRegionByForklift(ForkliftRequest forklift, RegionRequest regionToLeave) {
-        for (Region region : regionList.getRegions()) {
-            if (region.isTheSame(regionToLeave)) {
-                if (!region.isForkliftInside(forklift.getCoords()) && region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
-                    region.setForkliftSerialNumber("");
-                    return new ResponseEntity<>(HttpStatus.OK);
-                } else {
-                    return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        synchronized (regionList) {
+            for (Region region : regionList.getRegions()) {
+                if (region.isTheSame(regionToLeave)) {
+                    if (!region.isForkliftInside(forklift.getCoords()) && region.getForkliftSerialNumber().equals(forklift.getSerialNumber())) {
+                        region.setForkliftSerialNumber("");
+                        return new ResponseEntity<>(HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+                    }
                 }
             }
         }
@@ -88,9 +99,11 @@ public class RegionListService {
     }
 
     public boolean isForkliftInside(ForkliftRequest forkliftRequest) {
-        for (Region region : regionList.getRegions()) {
-            if (region.isForkliftInside(forkliftRequest.getCoords())) {
-                return true;
+        synchronized (regionList) {
+            for (Region region : regionList.getRegions()) {
+                if (region.isForkliftInside(forkliftRequest.getCoords())) {
+                    return true;
+                }
             }
         }
         return false;

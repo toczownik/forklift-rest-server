@@ -25,6 +25,13 @@ public class Region {
         this.polygonOut = polygonOut;
     }
 
+    public Region(Region region) {
+        this.id = region.getId();
+        this.polygonIn = region.getPolygonIn();
+        this.polygonOut = region.getPolygonOut();
+        this.forkliftSerialNumber = region.getForkliftSerialNumber();
+    }
+
     public boolean isForkliftInside(Point point) {
         return polygonIn.contains(point);
     }
