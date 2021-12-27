@@ -1,7 +1,6 @@
 package com.example.forkliftrestserver.model;
 
 import lombok.*;
-import java.awt.*;
 
 import javax.persistence.Entity;
 import java.awt.geom.Point2D;
