@@ -9,25 +9,31 @@ import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
 @Service
 public class RegionListService {
-    private RegionList regionList;
+    private final RegionList regionList;
 
     public RegionListService() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL resource = classLoader.getResource("static/config.yml");
         Constructor regionListConstructor = new Constructor(RegionList.class);
         TypeDescription regionDescription = new TypeDescription(Region.class);
         regionDescription.addPropertyParameters("regions", Region.class, Object.class);
         regionListConstructor.addTypeDescription(regionDescription);
+        regionList = regionListInit("static/config.yml");
+    }
+
+    private static RegionList regionListInit(String filePath) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL resource = classLoader.getResource(filePath);
         Yaml yaml = new Yaml();
         try {
-            regionList = yaml.load(resource.openStream());
-        } catch (Exception e) {
+            return yaml.load(resource.openStream());
+        } catch (IOException e) {
             e.printStackTrace();
+            return new RegionList();
         }
     }
 
