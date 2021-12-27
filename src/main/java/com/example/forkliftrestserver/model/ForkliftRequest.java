@@ -17,5 +17,5 @@ import java.awt.*;
 
 public class ForkliftRequest {
     private String serialNumber = "";
-    private Point coords = new Point();
+    private Point coords = new Point();  //point2d
 }

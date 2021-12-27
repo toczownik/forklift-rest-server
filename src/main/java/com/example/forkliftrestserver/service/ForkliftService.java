@@ -21,7 +21,7 @@ public class ForkliftService {
             forklift.setLastConnection(new Date());
             forklift.setCoords(forkliftRequest.getCoords());
             forklift.setState(state);
-            forkliftMap.replace(forklift.getSerialNumber(), forklift);
+//            forkliftMap.replace(forklift.getSerialNumber(), forklift);
         }
     }
 
@@ -30,7 +30,7 @@ public class ForkliftService {
         if(forklift != null){
             forklift.setLastConnection(new Date());
             forklift.setCoords(forkliftRequest.getCoords());
-            forkliftMap.replace(forklift.getSerialNumber(), forklift);
+//            forkliftMap.replace(forklift.getSerialNumber(), forklift);
         }
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 public class RegionListService {
-    private RegionList regionList;
+    private RegionList regionList; // new -> final
 
     public RegionListService() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
