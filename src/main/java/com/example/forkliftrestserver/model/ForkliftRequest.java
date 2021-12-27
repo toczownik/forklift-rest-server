@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 
 @Getter
@@ -17,5 +18,5 @@ import java.awt.*;
 
 public class ForkliftRequest {
     private String serialNumber = "";
-    private Point coords = new Point();
+    private Point2D.Double coords = new Point2D.Double();
 }

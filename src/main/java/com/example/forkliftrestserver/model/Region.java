@@ -3,6 +3,7 @@ package com.example.forkliftrestserver.model;
 import lombok.*;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import javax.persistence.Entity;
 
 
@@ -25,7 +26,7 @@ public class Region {
         this.polygonOut = polygonOut;
     }
 
-    public boolean isForkliftInside(Point point) {
+    public boolean isForkliftInside(Point2D point) {
         return polygonIn.contains(point);
     }
 

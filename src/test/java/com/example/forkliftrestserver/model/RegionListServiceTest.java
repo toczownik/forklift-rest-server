@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +42,7 @@ class RegionListServiceTest {
     @Test
     void getPermissionToFreeRegion(){
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(105, 105));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(105, 105));
         regionForklift.setForklift(forklift);
         regionForklift.setRegion(region);
         PermissionMessage message = regionListService.getPermission(forklift, region);
@@ -52,7 +53,7 @@ class RegionListServiceTest {
     @Test
     void getPermissionToOccupiedRegion(){
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(105, 105));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(105, 105));
         regionForklift.setForklift(forklift);
         regionList.getRegions().get(0).setForkliftSerialNumber("Spark");
         regionForklift.setRegion(region);
@@ -64,7 +65,7 @@ class RegionListServiceTest {
     @Test
     void getPermissionToLackdRegion(){
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(350, 350));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(350, 350));
         regionForklift.setForklift(forklift);
         regionForklift.setRegion(region);
         PermissionMessage message = regionListService.getPermission(forklift, region);
@@ -75,7 +76,7 @@ class RegionListServiceTest {
     @Test
     void leaveRegionByForkliftResponseOK() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(205, 205));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(205, 205));
         regionForklift.setForklift(forklift);
         regionList.getRegions().get(0).setForkliftSerialNumber("Mirek");
 
@@ -87,7 +88,7 @@ class RegionListServiceTest {
 
     @Test
     void leaveRegionByForkliftDifferentSerialNumberResponseNOTFOUND() {
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(205, 205));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(205, 205));
 
         regionList.getRegions().get(0).setForkliftSerialNumber("Spark");
 
@@ -98,7 +99,7 @@ class RegionListServiceTest {
 
     @Test
     void leaveRegionByForkliftDifferentRegionIdResponseNOTFOUND() {
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(205, 205));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(205, 205));
 
         regionList.getRegions().get(0).setId(12);
 
@@ -109,14 +110,14 @@ class RegionListServiceTest {
 
     @Test
     void isForkliftOutsideReturnTrue(){
-        Forklift forklift = new Forklift("Mirek", new Point(205, 205));
+        Forklift forklift = new Forklift("Mirek", new Point2D.Double(205, 205));
 
         assertEquals(true, regionListService.isForkliftOutside(forklift));
     }
 
     @Test
     void isForkliftOutsideSerialNumberReturnFalse(){
-        Forklift forklift = new Forklift("Mirek", new Point(205, 205));
+        Forklift forklift = new Forklift("Mirek", new Point2D.Double(205, 205));
 
         regionList.getRegions().get(0).setForkliftSerialNumber("Mirek");
 
@@ -125,21 +126,21 @@ class RegionListServiceTest {
 
     @Test
     void isForkliftOutsideForkliftReturnFalse(){
-        Forklift forklift = new Forklift("Mirek", new Point(105, 105));
+        Forklift forklift = new Forklift("Mirek", new Point2D.Double(105, 105));
 
         assertEquals(false, regionListService.isForkliftOutside(forklift));
     }
 
     @Test
     void isForkliftInsideReturnTrue(){
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(105, 105));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(105, 105));
 
         assertEquals(true, regionListService.isForkliftInside(forklift));
     }
 
     @Test
     void isForkliftInsideReturnFalse(){
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(205, 205));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(205, 205));
 
         regionList.getRegions().get(0).setForkliftSerialNumber("Mirek");
 

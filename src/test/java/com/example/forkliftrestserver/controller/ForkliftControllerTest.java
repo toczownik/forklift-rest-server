@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -45,7 +46,7 @@ class ForkliftControllerTest {
     @Test
     public void turnOnForkliftOutsideCREATED() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(10, 10));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(10, 10));
         regionForklift.setForklift(forklift);
         regionForklift.setRegion(null);
         assertEquals(new ResponseEntity<>(HttpStatus.CREATED), forkliftController.turnOnForklift(regionForklift));
@@ -67,7 +68,7 @@ class ForkliftControllerTest {
     @Test
     public void turnOnForkliftInsideCREATED() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(103, 103));
         RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
         regionForklift.setForklift(forkliftRequest);
         regionForklift.setRegion(regionRequest);
@@ -77,12 +78,12 @@ class ForkliftControllerTest {
     @Test
     public void turnOnForkliftInsideFORBIDDEN() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(103, 103));
         RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
         regionForklift.setForklift(forkliftRequest);
         regionForklift.setRegion(regionRequest);
         forkliftController.turnOnForklift(regionForklift);
-        forkliftRequest = new ForkliftRequest("Spark", new Point(104, 103));
+        forkliftRequest = new ForkliftRequest("Spark", new Point2D.Double(104, 103));
         regionForklift.setForklift(forkliftRequest);
         assertEquals(new ResponseEntity<>(HttpStatus.FORBIDDEN), forkliftController.turnOnForklift(regionForklift));
     }
@@ -90,7 +91,7 @@ class ForkliftControllerTest {
     @Test
     public void turnOnForkliftInsideNOTFOUND() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(103, 103));
         RegionRequest regionRequest = new RegionRequest(1, region.getPolygonIn(), region.getPolygonOut());
         regionForklift.setForklift(forkliftRequest);
         regionForklift.setRegion(regionRequest);
@@ -100,7 +101,7 @@ class ForkliftControllerTest {
     @Test
     public void checkActiveForklift() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(103, 103));
         RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
         regionForklift.setForklift(forkliftRequest);
         regionForklift.setRegion(regionRequest);
@@ -112,7 +113,7 @@ class ForkliftControllerTest {
     @Test
     public void checkInactiveForkliftOutside() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(10, 10));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(10, 10));
         RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
         regionForklift.setForklift(forkliftRequest);
         regionForklift.setRegion(regionRequest);
@@ -125,7 +126,7 @@ class ForkliftControllerTest {
     @Test
     public void checkInactiveForkliftInside() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(103, 103));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(103, 103));
         RegionRequest regionRequest = new RegionRequest(0, region.getPolygonIn(), region.getPolygonOut());
         regionForklift.setForklift(forkliftRequest);
         regionForklift.setRegion(regionRequest);
@@ -144,7 +145,7 @@ class ForkliftControllerTest {
     @Test
     void getPermissionToRegionResponseOK() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(105, 105));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(105, 105));
         regionForklift.setForklift(forklift);
         regionForklift.setRegion(region);
 
@@ -154,7 +155,7 @@ class ForkliftControllerTest {
     @Test
     void getPermissionToRegionResponseFORBIDDEN() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(105, 105));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(105, 105));
         regionForklift.setForklift(forklift);
         regionToList.setForkliftSerialNumber("Spark");
         regionForklift.setRegion(region);
@@ -167,7 +168,7 @@ class ForkliftControllerTest {
     @Test
     void getPermissionToRegionResponseNOTFOUND() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point(500, 500));
+        ForkliftRequest forklift = new ForkliftRequest("Mirek", new Point2D.Double(500, 500));
         regionForklift.setForklift(forklift);
         regionForklift.setRegion(region);
         ResponseEntity<String> response = forkliftController.getPermissionToRegion(regionForklift);
@@ -191,7 +192,7 @@ class ForkliftControllerTest {
     @Test
     void leaveTheRegionRegionNullBADREQUEST() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Spark", new Point(200, 200));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Spark", new Point2D.Double(200, 200));
 
         regionForklift.setForklift(forkliftRequest);
         regionForklift.setRegion(null);
@@ -201,7 +202,7 @@ class ForkliftControllerTest {
     @Test
     void leaveTheRegionOK() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(200, 200));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(200, 200));
 
         regionList.getRegions().get(0).setForkliftSerialNumber("Mirek");
         regionForklift.setForklift(forkliftRequest);
@@ -212,7 +213,7 @@ class ForkliftControllerTest {
     @Test
     void leaveTheRegionForkliftNotFoundNOTFOUND() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(200, 200));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(200, 200));
 
         regionList.getRegions().get(0).setForkliftSerialNumber("Spark");
         regionForklift.setForklift(forkliftRequest);
@@ -223,7 +224,7 @@ class ForkliftControllerTest {
     @Test
     void leaveTheRegionForkliftInsideNOTFOUND() {
         RegionForklift regionForklift = new RegionForklift();
-        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point(105, 105));
+        ForkliftRequest forkliftRequest = new ForkliftRequest("Mirek", new Point2D.Double(105, 105));
 
         regionList.getRegions().get(0).setForkliftSerialNumber("Mirek");
         regionForklift.setForklift(forkliftRequest);

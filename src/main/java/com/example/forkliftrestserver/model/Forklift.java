@@ -4,6 +4,7 @@ import lombok.*;
 import java.awt.*;
 
 import javax.persistence.Entity;
+import java.awt.geom.Point2D;
 import java.util.Date;
 
 @Getter
@@ -14,11 +15,11 @@ import java.util.Date;
 
 public class Forklift {
     private String serialNumber = "";
-    private Point coords = new Point();
+    private Point2D.Double coords = new Point2D.Double();
     private ForkliftState state = ForkliftState.ACTIVE;
     private Date lastConnection;
 
-    public Forklift(String serialNumber, Point coords) {
+    public Forklift(String serialNumber, Point2D.Double coords) {
         this.serialNumber = serialNumber;
         this.coords = coords;
     }
